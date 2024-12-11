@@ -211,6 +211,26 @@ const move_focus = (e) => {
     move_focus_in_direction('right');
   } else if (e.keyCode === 40) { // Arrow Down
     move_focus_in_direction('down');
+  } else if (e.keyCode === 13) {
+    if (focus) {
+      const editableNode = focus.querySelector('.c_nodes, .p_nodes, .title_nodes');
+      if (editableNode) {
+        editableNode.setAttribute('contenteditable', 'true');
+        editableNode.focus();
+
+        const preventEnter = (event) => {
+          if (event.key === 'Enter') {
+            event.preventDefault();
+          }
+        };
+
+        editableNode.addEventListener('keydown', preventEnter);
+        editableNode.addEventListener('blur', () => {
+          editableNode.removeAttribute('contenteditable');
+          editableNode.removeEventListener('keydown', preventEnter);
+        });
+      }
+    }
   }
 };
 
@@ -236,25 +256,34 @@ const move_focus_in_direction = (direction) => {
       case 'left':
         // 現在のノードの右側に最も近いノードを探す
         if (nodeRect.right < currentRect.left) {
-          distance = currentRect.left - nodeRect.right;
+          // 距離を水平方向と垂直方向の距離で評価
+          const horizontalDistance = currentRect.left - nodeRect.right;
+          const verticalDistance = Math.abs((currentRect.top + currentRect.bottom) / 2 - (nodeRect.top + nodeRect.bottom) / 2);
+          distance = Math.sqrt(horizontalDistance ** 2 + verticalDistance ** 2); // 総距離
         }
         break;
+
       case 'right':
         // 現在のノードの左側に最も近いノードを探す
         if (nodeRect.left > currentRect.right) {
-          distance = nodeRect.left - currentRect.right;
+          // 距離を水平方向と垂直方向の距離で評価
+          const horizontalDistance = nodeRect.left - currentRect.right;
+          const verticalDistance = Math.abs((currentRect.top + currentRect.bottom) / 2 - (nodeRect.top + nodeRect.bottom) / 2);
+          distance = Math.sqrt(horizontalDistance ** 2 + verticalDistance ** 2); // 総距離
         }
         break;
       case 'up':
-        // 現在のノードの下に最も近いノードを探す
         if (nodeRect.bottom < currentRect.top) {
-          distance = currentRect.top - nodeRect.bottom;
+          const verticalDistance = currentRect.top - nodeRect.bottom;
+          const horizontalDistance = Math.abs(currentRect.left - nodeRect.left);
+          distance = verticalDistance + horizontalDistance;
         }
         break;
       case 'down':
-        // 現在のノードの上に最も近いノードを探す
         if (nodeRect.top > currentRect.bottom) {
-          distance = nodeRect.top - currentRect.bottom;
+          const verticalDistance = nodeRect.top - currentRect.bottom;
+          const horizontalDistance = Math.abs(currentRect.left - nodeRect.left);
+          distance = verticalDistance + horizontalDistance;
         }
         break;
     }

@@ -42,7 +42,22 @@
         'url': '',
         'parent': '0',
         'direction': ''
-      },]">
+      },
+      {
+        'id': 6,
+        'text': 'ch6',
+        'url': '',
+        'parent': '5',
+        'direction': ''
+      },
+      {
+        'id': 7,
+        'text': 'ch5',
+        'url': '',
+        'parent': '5',
+        'direction': ''
+      },
+    ]">
 
     </MindMap>
 
