@@ -199,12 +199,11 @@ const move_focus = (e) => {
       nextFocus = currentFocus.nextElementSibling;
     }
 
-    // If next focus is a valid element and it exists, focus it
     if (nextFocus && nextFocus.classList.contains('selector')) {
       nextFocus.focus();
       update_focus({ srcElement: nextFocus });
     }
-    e.preventDefault(); // Prevent default tab behavior (moving to the next element in the DOM)
+    e.preventDefault();
   } else if (e.keyCode === 37) { // Arrow Left
     move_focus_in_direction('left');
   } else if (e.keyCode === 38) { // Arrow Up
@@ -218,6 +217,12 @@ const move_focus = (e) => {
     if (editableNode) {
       if (!isEditing.value) {
         editableNode.focus();
+        const range = document.createRange();
+        const selection = window.getSelection();
+        range.selectNodeContents(editableNode); // 要素内のすべての内容を選択
+        range.collapse(false); // 範囲を折りたたんで一番後ろにカーソルを移動
+        selection.removeAllRanges(); // 既存の選択範囲をクリア
+        selection.addRange(range); // 新しい範囲を追加
         isEditing.value = true;
       } else {
         isEditing.value = false;
