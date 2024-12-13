@@ -48,6 +48,8 @@ const lines = ref([]);
 let count = 0;
 let focus = null;
 const LeaderLine = window.LeaderLine;
+const isEditing = ref()
+isEditing.value = false
 
 const right_append = (rap_node, node_text, node_childes, node_selector) => {
   node_selector.appendChild(node_text);
@@ -211,24 +213,16 @@ const move_focus = (e) => {
     move_focus_in_direction('right');
   } else if (e.keyCode === 40) { // Arrow Down
     move_focus_in_direction('down');
-  } else if (e.keyCode === 13) {
-    if (focus) {
-      const editableNode = focus.querySelector('.c_nodes, .p_nodes, .title_nodes');
-      if (editableNode) {
-        editableNode.setAttribute('contenteditable', 'true');
+  } else if (e.metaKey && e.key === 'Enter') {
+    const editableNode = focus.querySelector('.c_nodes, .p_nodes, .title_nodes');
+    if (editableNode) {
+      if (!isEditing.value) {
         editableNode.focus();
-
-        const preventEnter = (event) => {
-          if (event.key === 'Enter') {
-            event.preventDefault();
-          }
-        };
-
-        editableNode.addEventListener('keydown', preventEnter);
-        editableNode.addEventListener('blur', () => {
-          editableNode.removeAttribute('contenteditable');
-          editableNode.removeEventListener('keydown', preventEnter);
-        });
+        isEditing.value = true;
+      } else {
+        isEditing.value = false;
+        editableNode.blur();
+        focus.focus()
       }
     }
   }
@@ -237,6 +231,11 @@ const move_focus = (e) => {
 const move_focus_in_direction = (direction) => {
   let currentFocus = focus;
   let nextFocus = null;
+
+  const activeEditable = document.activeElement;
+  if (activeEditable && activeEditable.isContentEditable) {
+    return; // 編集中の場合は何もしない
+  }
 
   // 現在のノードの座標を取得
   const currentRect = currentFocus.getBoundingClientRect();
