@@ -50,6 +50,7 @@ let focus = null;
 const LeaderLine = window.LeaderLine;
 const isEditing = ref()
 isEditing.value = false
+const plusButton = ref(true)
 
 const right_append = (rap_node, node_text, node_childes, node_selector) => {
   node_selector.appendChild(node_text);
@@ -179,6 +180,42 @@ const update_focus = (e) => {
   }
   e.srcElement.classList.add('selector_focus');
   focus = e.srcElement;
+
+  if (plusButton.value) {
+    const existingWrapper = plusButton.value;
+    if (existingWrapper && existingWrapper.className) {
+      existingWrapper.remove();
+      const existingButton = existingWrapper.querySelector(".plus-button");
+      if (existingButton) {
+        existingButton.remove(); // ボタンを削除
+      }
+    }
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "plus-button-wrapper";
+    wrapper.style.position = "absolute"; // ラップ要素を絶対位置で配置
+    wrapper.style.top = "0";
+    wrapper.style.left = "0";
+
+    focus.appendChild(wrapper); // focusの中にラップ要素を追加
+
+    // 新しいボタンを作成
+    const button = document.createElement("button");
+    button.textContent = "✚";
+    button.className = "plus-button";
+    button.style.position = "relative"; // ボタンをラップ内で相対位置に配置
+
+    // ボタンをラップ要素に追加
+    wrapper.appendChild(button);
+
+    // ボタンクリック時の動作を設定
+    button.addEventListener("click", () => {
+      alert("ボタンがクリックされました！");
+    });
+
+    // 新しいラップ要素を保存
+    plusButton.value = wrapper;
+  }
 };
 
 const focus_node = () => {
@@ -611,5 +648,50 @@ onMounted(() => {
 .selector_focus {
   border: 4px solid #00aaff;
   border-radius: 10px;
+}
+
+.plus-button-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  width: 100%;
+  height: 100%;
+  display: block;
+  /* 要素が表示されている状態にします */
+  pointer-events: none;
+  /* クリックイベントを無効にする */
+}
+
+.plus-button {
+  position: relative;
+  top: 28%;
+  left: 110%;
+  font-size: 24px;
+  background-color: #00aaff;
+  color: white;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  z-index: 30;
+  pointer-events: auto;
+}
+
+.plus-button::before {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 6px;
+  background-color: #00aaff;
+
+  top: 45%;
+  left: -20%;
+  /* z-index: -100; */
 }
 </style>
