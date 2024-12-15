@@ -174,6 +174,89 @@ const input_node_test = (e) => {
   return false;
 };
 
+const createChildNode = () => {
+  if (!focus) return;
+
+  let parentNodeId = focus.id.replace("selector", "");
+  if (parentNodeId == "") {
+    parentNodeId = "title"
+  }
+
+  // 新しいノードの情報を生成
+  const newNode = {
+    id: nodes.value.length + 1, // 新しいID
+    text: "new node", // デフォルトテキスト
+    parent: parentNodeId, // 親ノード
+    direction: null,
+  };
+  nodes.value.push(newNode);
+
+  // 新しいDOM要素を作成
+  const node_text = document.createElement("div");
+  const node_selector = document.createElement("div");
+  node_selector.classList.add("selector");
+  node_selector.id = `selector${newNode.id}`;
+  node_selector.tabIndex = "0";
+
+  const rap_node = document.createElement("div");
+  const node_childes = document.createElement("div");
+  const text = document.createTextNode(newNode.text);
+  node_text.contentEditable = true;
+
+  node_childes.id = `${newNode.id}`;
+  node_text.id = `node${newNode.id}`;
+  node_text.appendChild(text);
+
+  if (newNode.parent === 'title') {
+    const right = document.getElementById('right_center');
+    const left = document.getElementById('left_center');
+    console.log("title")
+    if (count % 2 === 0) {
+      const nodeFromParent = makeFromParent(node_text, rap_node, node_childes);
+      right_append(nodeFromParent.rap_node, nodeFromParent.node_text, nodeFromParent.node_childes, node_selector);
+      right.appendChild(nodeFromParent.rap_node);
+      newNode.direction = 'right';
+    } else {
+      const nodeFromParent = makeFromParent(node_text, rap_node, node_childes);
+      left_append(nodeFromParent.rap_node, nodeFromParent.node_text, nodeFromParent.node_childes, node_selector);
+      left.appendChild(nodeFromParent.rap_node);
+      node_childes.classList.add('margin-left');
+      newNode.direction = 'left';
+    }
+  } else {
+    makeFromChild(newNode, node_text, rap_node, node_childes, node_selector);
+  }
+
+  // イベントリスナーを新しい要素に追加
+  const el_node = document.getElementById(`node${newNode.id}`);
+  const el_selector = document.getElementById(`selector${newNode.id}`);
+
+  if (el_node && el_selector) {
+    el_node.addEventListener("blur", () => {
+      line_reset();
+    });
+
+    el_selector.addEventListener("click", (e) => {
+      update_focus(e);
+    });
+
+    el_selector.addEventListener("dblclick", (e) => {
+      input_node_test(e.srcElement.id.substr(8));
+    });
+
+    el_selector.addEventListener("keydown", (e) => {
+      if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
+        input_node_test(e.srcElement.id.substr(8));
+      }
+      move_focus(e);
+    });
+
+    // 線を更新
+    removelines();
+    makelines();
+  }
+};
+
 const update_focus = (e) => {
   if (focus !== null) {
     focus.classList.remove('selector_focus');
@@ -210,7 +293,7 @@ const update_focus = (e) => {
 
     // ボタンクリック時の動作を設定
     button.addEventListener("click", () => {
-      alert("ボタンがクリックされました！");
+      createChildNode()
     });
 
     // 新しいラップ要素を保存
@@ -336,14 +419,25 @@ const move_focus_in_direction = (direction) => {
     }
   });
 
-  // If nextFocus is valid and is a selector element
   if (nextFocus && nextFocus.classList.contains('selector')) {
-    const rapNodeChild = nextFocus.querySelector('.rap_node');
-    const selector = rapNodeChild ? rapNodeChild.querySelector('.selector') : null;
+    let rapNodeChild = nextFocus.querySelector('.rap_node');
+    let selector = rapNodeChild ? rapNodeChild.querySelector('.selector') : null;
+
+    if (rapNodeChild == null) {
+      rapNodeChild = nextFocus.querySelector('.rap_node_left');
+      selector = rapNodeChild ? rapNodeChild.querySelector('.selector') : null;
+    }
 
     if (selector) {
-      selector.focus();
-      update_focus({ srcElement: selector });
+      const focusedElement = selector.querySelector('[id*="selector"]');
+      if (focusedElement) {
+        // 正しい要素にフォーカスを当てる
+        focusedElement.focus();
+        update_focus({ srcElement: focusedElement });
+      } else {
+        selector.focus();
+        update_focus({ srcElement: selector });
+      }
     } else {
       nextFocus.focus();
       update_focus({ srcElement: nextFocus });
@@ -686,12 +780,12 @@ onMounted(() => {
 .plus-button::before {
   content: '';
   position: absolute;
-  width: 10px;
+  width: 35px;
   height: 6px;
   background-color: #00aaff;
 
   top: 45%;
   left: -20%;
-  /* z-index: -100; */
+  z-index: -100;
 }
 </style>
