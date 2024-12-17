@@ -83,7 +83,12 @@ const makeFromChild = (el, node_text, rap_node, node_childes, node_selector) => 
     right_append(rap_node, node_text, node_childes, node_selector);
     rap_node.classList.add('rap_node');
   } else {
-    left_append(rap_node, node_text, node_childes, node_selector);
+    if (nodes.value[el.parent].parent == "title") {
+      right_append(rap_node, node_text, node_childes, node_selector);
+    } else {
+      right_append(rap_node, node_text, node_childes, node_selector);
+      margin_rap_node.classList.add('margin-left-cnodes');
+    }
     rap_node.classList.add('rap_node_left');
   }
 
@@ -688,18 +693,12 @@ onMounted(() => {
   background-color: #F5F5F5;
   border-radius: 10px;
   box-shadow: 0 3px 3px 0 rgba(0, 0, 0, .5);
-  /* width: fit-content;
-  height: fit-content; */
-
   width: -moz-fit-content;
   width: fit-content;
-
   font-size: 23px;
   font-family: sans-serif;
-
   padding: 10px 10px;
   /* margin: 30px 30px; */
-
   position: relative;
   z-index: -10;
 }
@@ -710,18 +709,17 @@ onMounted(() => {
 
 .margin_c_nodes {
   margin: 30px 30px;
+  /* margin-left: auto; */
+}
+
+.margin-left-cnodes {
+  margin-left: auto;
 }
 
 .rap_node {
   display: flex;
   align-items: center;
   width: 100%;
-  /* height: 100%; */
-  /* padding: 10px 0px; */
-  /* margin-left: auto;
-  margin-right: 0; */
-
-  /* background-color: aqua; */
 }
 
 .rap_node_left {
@@ -729,12 +727,14 @@ onMounted(() => {
   align-items: center;
   padding: 10px 0px;
   width: 100%;
-
-  justify-content: flex-end;
+  justify-content: flex-start;
+  flex-direction: row-reverse;
 }
 
 .margin-left {
-  /* margin: auto; */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   margin-left: auto;
   margin-right: 0;
 }
