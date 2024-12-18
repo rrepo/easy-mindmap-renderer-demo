@@ -95,7 +95,6 @@ const makeFromChild = (el, node_text, rap_node, node_childes, node_selector) => 
   margin_rap_node.appendChild(rap_node);
   margin_rap_node.classList.add('margin_c_nodes');
   parent.appendChild(margin_rap_node);
-  return { rap_node, node_text, node_childes };
 };
 
 const makeline = (el, direction, parent) => {
