@@ -179,62 +179,45 @@ const input_node_test = (e) => {
   return false;
 };
 
-const createChildNode = () => {
-  if (!focus) return;
+const createNodeElements = (el) => {
+  const node_text = document.createElement('div');
+  const node_selector = document.createElement('div');
+  node_selector.classList.add('selector');
+  node_selector.id = `selector${el.id}`;
+  node_selector.tabIndex = '0';
 
-  let parentNodeId = focus.id.replace("selector", "");
-  if (parentNodeId == "") {
-    parentNodeId = "title"
-  }
-
-  // 新しいノードの情報を生成
-  const newNode = {
-    id: nodes.value.length + 1, // 新しいID
-    text: "new node", // デフォルトテキスト
-    parent: parentNodeId, // 親ノード
-    direction: null,
-  };
-  nodes.value.push(newNode);
-
-  // 新しいDOM要素を作成
-  const node_text = document.createElement("div");
-  const node_selector = document.createElement("div");
-  node_selector.classList.add("selector");
-  node_selector.id = `selector${newNode.id}`;
-  node_selector.tabIndex = "0";
-
-  const rap_node = document.createElement("div");
-  const node_childes = document.createElement("div");
-  const text = document.createTextNode(newNode.text);
+  const rap_node = document.createElement('div');
+  const node_childes = document.createElement('div');
+  const text = document.createTextNode(el.text);
   node_text.contentEditable = true;
 
-  node_childes.id = `${newNode.id}`;
-  node_text.id = `node${newNode.id}`;
+  node_childes.id = `${el.id}`;
+  node_text.id = `node${el.id}`;
   node_text.appendChild(text);
 
-  if (newNode.parent === 'title') {
+  if (el.parent === 'title') {
     const right = document.getElementById('right_center');
     const left = document.getElementById('left_center');
-    console.log("title")
+
     if (count % 2 === 0) {
       const nodeFromParent = makeFromParent(node_text, rap_node, node_childes);
       right_append(nodeFromParent.rap_node, nodeFromParent.node_text, nodeFromParent.node_childes, node_selector);
       right.appendChild(nodeFromParent.rap_node);
-      newNode.direction = 'right';
+      el.direction = 'right';
     } else {
       const nodeFromParent = makeFromParent(node_text, rap_node, node_childes);
       left_append(nodeFromParent.rap_node, nodeFromParent.node_text, nodeFromParent.node_childes, node_selector);
       left.appendChild(nodeFromParent.rap_node);
       node_childes.classList.add('margin-left');
-      newNode.direction = 'left';
+      el.direction = 'left';
     }
   } else {
-    makeFromChild(newNode, node_text, rap_node, node_childes, node_selector);
+    makeFromChild(el, node_text, rap_node, node_childes, node_selector);
   }
 
-  // イベントリスナーを新しい要素に追加
-  const el_node = document.getElementById(`node${newNode.id}`);
-  const el_selector = document.getElementById(`selector${newNode.id}`);
+  // Attach event listeners
+  const el_node = document.getElementById(`node${el.id}`);
+  const el_selector = document.getElementById(`selector${el.id}`);
 
   if (el_node && el_selector) {
     el_node.addEventListener("blur", () => {
@@ -255,11 +238,30 @@ const createChildNode = () => {
       }
       move_focus(e);
     });
-
-    // 線を更新
-    removelines();
-    makelines();
   }
+};
+
+const createChildNode = () => {
+  if (!focus) return;
+
+  let parentNodeId = focus.id.replace("selector", "");
+  if (parentNodeId == "") {
+    parentNodeId = "title";
+  }
+
+  const newNode = {
+    id: nodes.value.length + 1,
+    text: "new node",
+    parent: parentNodeId,
+    direction: null,
+  };
+  nodes.value.push(newNode);
+
+  createNodeElements(newNode);
+
+  // After creating the node, re-render the lines if necessary
+  removelines();
+  makelines();
 };
 
 const update_focus = (e) => {
@@ -457,71 +459,8 @@ onMounted(() => {
 
   el_title.scrollIntoView({ block: 'center', inline: 'center' });
 
-  const right = document.getElementById('right_center');
-  const left = document.getElementById('left_center');
-
   nodes.value.forEach(el => {
-    const node_text = document.createElement('div');
-    const node_selector = document.createElement('div');
-    node_selector.classList.add('selector');
-    node_selector.id = `selector${el.id}`;
-    node_selector.tabIndex = '0';
-
-    const rap_node = document.createElement('div');
-    const node_childes = document.createElement('div');
-    const text = document.createTextNode(el.text);
-    node_text.contentEditable = true;
-
-    node_childes.id = `${el.id}`;
-    node_text.id = `node${el.id}`;
-    node_text.appendChild(text);
-
-    if (el.parent === 'title') {
-      if (count % 2 === 0) {
-        const nodeFromParent = makeFromParent(node_text, rap_node, node_childes);
-        right_append(nodeFromParent.rap_node, nodeFromParent.node_text, nodeFromParent.node_childes, node_selector);
-        right.appendChild(nodeFromParent.rap_node);
-        el.direction = 'right';
-      } else {
-        const nodeFromParent = makeFromParent(node_text, rap_node, node_childes);
-        left_append(nodeFromParent.rap_node, nodeFromParent.node_text, nodeFromParent.node_childes, node_selector);
-        left.appendChild(nodeFromParent.rap_node);
-        node_childes.classList.add('margin-left');
-        el.direction = 'left';
-      }
-    } else {
-      makeFromChild(el, node_text, rap_node, node_childes, node_selector);
-    }
-
-    const el_node = document.getElementById(`node${el.id}`);
-    const el_selector = document.getElementById(`selector${el.id}`);
-
-    el_node.addEventListener('blur', () => {
-      line_reset();
-    });
-
-    el_selector.addEventListener('click', (e) => {
-      update_focus(e);
-    });
-
-    el_selector.addEventListener('dblclick', (e) => {
-      input_node_test(e.srcElement.id.substr(8));
-    });
-
-    el_selector.addEventListener('keydown', (e) => {
-      if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
-        input_node_test(e.srcElement.id.substr(8));
-      }
-      move_focus(e); // Call move_focus to handle Tab key navigation and Arrow keys
-    });
-
-    el_node.addEventListener('focus', () => {
-      el_edge.removeEventListener('scroll', focus_node);
-    });
-
-    el_node.addEventListener('blur', () => {
-      el_edge.addEventListener('scroll', focus_node);
-    });
+    createNodeElements(el);
   });
 
   makelines();
