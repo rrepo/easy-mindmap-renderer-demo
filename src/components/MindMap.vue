@@ -392,10 +392,11 @@ const createChildNode = () => {
 
   createNewNode(newNode)
 
+  // フォーカスしたあとisEditingをtrueにする
   update_focus({ srcElement: document.getElementById("selector" + newNode.id) });
   focus_node();
-  console.log(document.getElementById("node" + newNode.id))
   document.getElementById("node" + newNode.id).focus()
+  isEditing.value = true
 
   removelines();
   makelines();
@@ -716,7 +717,7 @@ onMounted(() => {
 .plus-button {
   position: relative;
   top: 28%;
-  left: 110%;
+  left: 100%;
   font-size: 24px;
   background-color: #00aaff;
   color: white;
