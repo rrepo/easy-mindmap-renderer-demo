@@ -387,6 +387,10 @@ const createChildNode = () => {
 
   createNewNode(newNode)
 
+  update_focus({ srcElement: document.getElementById("selector" + newNode.id) });
+  focus_node();
+  document.getElementById("node" + newNode.id).focus()
+
   removelines();
   makelines();
 };
@@ -436,7 +440,10 @@ const createNewNode = (el) => {
   });
 
   el_selector.addEventListener('click', (e) => {
-    update_focus(e);
+    console.log(e.srcElement.classList)
+    if (e.srcElement.classList[0] == "selector") {
+      update_focus(e);
+    }
   });
 
   el_selector.addEventListener('dblclick', (e) => {
@@ -471,7 +478,7 @@ onMounted(() => {
   });
 
   makelines();
-  
+
   el_title_selector.addEventListener('keydown', (e) => {
     if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
       input_node(e);
