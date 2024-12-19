@@ -180,6 +180,11 @@ const input_node_test = (e) => {
 };
 
 const update_focus = (e) => {
+  // ボタンがクリックされて作動したときは終了するようにする
+  if (e.srcElement.classList[0] != "selector") {
+    return
+  }
+
   if (focus.value !== null) {
     focus.value.classList.remove('selector_focus');
   }
@@ -389,6 +394,7 @@ const createChildNode = () => {
 
   update_focus({ srcElement: document.getElementById("selector" + newNode.id) });
   focus_node();
+  console.log(document.getElementById("node" + newNode.id))
   document.getElementById("node" + newNode.id).focus()
 
   removelines();
@@ -440,10 +446,7 @@ const createNewNode = (el) => {
   });
 
   el_selector.addEventListener('click', (e) => {
-    console.log(e.srcElement.classList)
-    if (e.srcElement.classList[0] == "selector") {
-      update_focus(e);
-    }
+    update_focus(e);
   });
 
   el_selector.addEventListener('dblclick', (e) => {
@@ -733,12 +736,12 @@ onMounted(() => {
 .plus-button::before {
   content: '';
   position: absolute;
-  width: 35px;
-  height: 6px;
+  /* width: 35px; */
+  /* height: 6px; */
   background-color: #00aaff;
 
   top: 45%;
-  left: -20%;
+  left: -30px;
   z-index: -100;
 }
 </style>
