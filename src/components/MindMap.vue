@@ -477,9 +477,7 @@ onMounted(() => {
 
   el_title.scrollIntoView({ block: 'center', inline: 'center' });
 
-  nodes.value.forEach(el => {
-    createNewNode(el)
-  });
+  nodes.value.forEach(createNewNode)
 
   makelines();
 
