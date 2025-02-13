@@ -288,12 +288,14 @@ const createChildNode = () => {
     parentNodeId = "title"
   }
 
+  const paredentNode = nodes.value.find((node: any) => node.id == parentNodeId)
+
   // 新しいノードの情報を生成
   const newNode = {
     id: nodes.value.length + 1, // 新しいID
-    text: "", // デフォルトテキスト
+    text: nodes.value.length + 1, // デフォルトテキスト
     parent: parentNodeId, // 親ノード
-    direction: null,
+    direction: paredentNode.direction,
   };
   nodes.value.push(newNode);
 
@@ -302,7 +304,9 @@ const createChildNode = () => {
   // フォーカスしたあとisEditingをtrueにする
   update_focus({ srcElement: document.getElementById("selector" + newNode.id) });
   focus_node();
-  document.getElementById("node" + newNode.id).focus()
+  const newFocus: any = document.getElementById("node" + newNode.id)
+  // newFocus.focus();
+
   isEditing.value = true
 
   line_reset();

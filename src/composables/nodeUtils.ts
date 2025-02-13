@@ -43,3 +43,4 @@ export const makeFromChild = (nodes: any, el: any, node_text: any, rap_node: any
   parent.appendChild(margin_rap_node);
   return { rap_node, node_text, node_childes };
 };
+
