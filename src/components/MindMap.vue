@@ -37,6 +37,9 @@
 import { onMounted, ref } from 'vue';
 // import { dragscroll } from 'vue-dragscroll';
 
+import { makelines, removeline } from '@/composables/lineUtils';
+import { rightAppend, leftAppend, makeFromParent, makeFromChild } from '@/composables/nodeUtils';
+
 const props = defineProps({
   title_props: String,
   node_props: Array,
@@ -45,60 +48,12 @@ const props = defineProps({
 const title: any = ref(props.title_props);
 const nodes: any = ref(props.node_props);
 const lines: any = ref([]);
-let count = 0;
+let count = ref(0);
 const focus: any = ref(null);
 const LeaderLine: any = window.LeaderLine;
 const isEditing: any = ref()
 isEditing.value = false
 const plusButton: any = ref(true)
-
-const right_append = (rap_node, node_text, node_childes, node_selector) => {
-  node_selector.appendChild(node_text);
-  rap_node.appendChild(node_selector);
-  rap_node.appendChild(node_childes);
-};
-
-const left_append = (rap_node, node_text, node_childes, node_selector) => {
-  node_selector.appendChild(node_text);
-  rap_node.appendChild(node_childes);
-  rap_node.appendChild(node_selector);
-};
-
-const makeFromParent = (node_text, rap_node, node_childes) => {
-  node_text.classList.add('p_nodes');
-  rap_node.classList.add('rap_node');
-  count++;
-  return { rap_node, node_text, node_childes };
-};
-
-const makeFromChild = (el, node_text, rap_node, node_childes, node_selector) => {
-  const margin_rap_node = document.createElement('div');
-  margin_rap_node.classList.add('selector');
-
-  const parent = document.getElementById(el.parent);
-  node_text.classList.add('c_nodes');
-
-  el.direction = nodes.value[el.parent].direction;
-  if (el.direction === 'right') {
-    right_append(rap_node, node_text, node_childes, node_selector);
-    rap_node.classList.add('rap_node');
-  } else {
-    if (nodes.value[el.parent].parent == "title") {
-      right_append(rap_node, node_text, node_childes, node_selector);
-    } else {
-      right_append(rap_node, node_text, node_childes, node_selector);
-      margin_rap_node.classList.add('margin-left-cnodes');
-    }
-    rap_node.classList.add('rap_node_left');
-  }
-
-  margin_rap_node.appendChild(rap_node);
-  margin_rap_node.classList.add('margin_c_nodes');
-  parent.appendChild(margin_rap_node);
-  return { rap_node, node_text, node_childes };
-};
-
-import { makelines, removeline } from '@/composables/lineUtils';
 
 const line_reset = () => {
   lines.value = removeline(lines.value);
@@ -185,6 +140,7 @@ const focus_node = () => {
     focus.value.focus();
   }
 };
+
 const move_focus = (e) => {
   if (e.keyCode === 9) { // Tab key code
     let currentFocus = focus.value;
@@ -373,20 +329,24 @@ const createNewNode = (el: any) => {
   node_text.appendChild(text);
 
   if (el.parent === 'title') {
-    if (count % 2 === 0) {
+    if (count.value % 2 === 0) {
       const nodeFromParent = makeFromParent(node_text, rap_node, node_childes);
-      right_append(nodeFromParent.rap_node, nodeFromParent.node_text, nodeFromParent.node_childes, node_selector);
+      count.value++
+
+      rightAppend(nodeFromParent.rap_node, nodeFromParent.node_text, nodeFromParent.node_childes, node_selector);
       right.appendChild(nodeFromParent.rap_node);
       el.direction = 'right';
     } else {
       const nodeFromParent = makeFromParent(node_text, rap_node, node_childes);
-      left_append(nodeFromParent.rap_node, nodeFromParent.node_text, nodeFromParent.node_childes, node_selector);
+      count.value++
+
+      leftAppend(nodeFromParent.rap_node, nodeFromParent.node_text, nodeFromParent.node_childes, node_selector);
       left.appendChild(nodeFromParent.rap_node);
       node_childes.classList.add('margin-left');
       el.direction = 'left';
     }
   } else {
-    makeFromChild(el, node_text, rap_node, node_childes, node_selector);
+    makeFromChild(nodes.value, el, node_text, rap_node, node_childes, node_selector);
   }
 
   const el_node: any = document.getElementById(`node${el.id}`);
