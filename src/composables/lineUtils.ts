@@ -37,3 +37,11 @@ export const makelines = (LeaderLine: any, nodes: any): any => {
   });
   return returnEl
 };
+
+export const removeline = (lines: any): any => {
+  lines.forEach((el: any) => {
+    el.parentNode.removeChild(el);
+  });
+  lines.length = 0;
+  return lines;
+}

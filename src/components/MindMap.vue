@@ -98,17 +98,10 @@ const makeFromChild = (el, node_text, rap_node, node_childes, node_selector) => 
   return { rap_node, node_text, node_childes };
 };
 
-import { makelines } from '@/composables/lineUtils';
-
-const removelines = () => {
-  lines.value.forEach((el: any) => {
-    el.parentNode.removeChild(el);
-  });
-  lines.value.length = 0;
-};
+import { makelines, removeline } from '@/composables/lineUtils';
 
 const line_reset = () => {
-  removelines();
+  lines.value = removeline(lines.value);
   lines.value = makelines(LeaderLine, nodes.value);
 };
 
@@ -356,17 +349,16 @@ const createChildNode = () => {
   document.getElementById("node" + newNode.id).focus()
   isEditing.value = true
 
-  removelines();
-  lines.value = makelines(LeaderLine, nodes.value);
+  line_reset();
 };
 
-const createNewNode = (el) => {
-  const right = document.getElementById('right_center');
-  const left = document.getElementById('left_center');
+const createNewNode = (el: any) => {
+  const right: any = document.getElementById('right_center');
+  const left: any = document.getElementById('left_center');
 
-  const el_edge = document.getElementById('edge');
-  const node_text = document.createElement('div');
-  const node_selector = document.createElement('div');
+  const el_edge: any = document.getElementById('edge');
+  const node_text: any = document.createElement('div');
+  const node_selector: any = document.createElement('div');
   node_selector.classList.add('selector');
   node_selector.id = `selector${el.id}`;
   node_selector.tabIndex = '0';
@@ -397,8 +389,8 @@ const createNewNode = (el) => {
     makeFromChild(el, node_text, rap_node, node_childes, node_selector);
   }
 
-  const el_node = document.getElementById(`node${el.id}`);
-  const el_selector = document.getElementById(`selector${el.id}`);
+  const el_node: any = document.getElementById(`node${el.id}`);
+  const el_selector: any = document.getElementById(`selector${el.id}`);
 
   el_node.addEventListener('blur', () => {
     line_reset();
@@ -429,9 +421,9 @@ const createNewNode = (el) => {
 }
 
 onMounted(() => {
-  const el_title = document.getElementById('title');
-  const el_edge = document.getElementById('edge');
-  const el_title_selector = document.getElementById('selector');
+  const el_title: any = document.getElementById('title');
+  const el_edge: any = document.getElementById('edge');
+  const el_title_selector: any = document.getElementById('selector');
 
   el_title.scrollIntoView({ block: 'center', inline: 'center' });
 
