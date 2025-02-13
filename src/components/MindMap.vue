@@ -1,19 +1,19 @@
 <template>
-  <div class="edge" id="edge" v-dragscroll="true">
-    <div class="field" id="field">
+  <div id="edge" v-dragscroll="true" class="edge">
+    <div id="field" class="field">
       <div class="left">
         <div class="left_vertical">
-          <div class="left_horizontal" id="left_center">
-            <div></div>
+          <div id="left_center" class="left_horizontal">
+            <div />
           </div>
         </div>
       </div>
 
       <div class="center">
         <div class="title_node_rap">
-          <div class="selector" id="selector" tabindex="0" @click="update_focus" @dblclick="input_node"
+          <div id="selector" class="selector" tabindex="0" @click="update_focus" @dblclick="input_node"
             @keydown="move_focus">
-            <div class="title_nodes" id="title" contenteditable="true" @blur="line_reset">
+            <div id="title" class="title_nodes" contenteditable="true" @blur="line_reset">
               {{ title }}
             </div>
           </div>
@@ -22,18 +22,18 @@
 
       <div class="right">
         <div class="right_vertical">
-          <div class="right_horizontal" id="right_center">
-            <div></div>
+          <div id="right_center" class="right_horizontal">
+            <div />
           </div>
         </div>
       </div>
 
-      <div id="line-wrapper"></div>
+      <div id="line-wrapper" />
     </div>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref } from 'vue';
 // import { dragscroll } from 'vue-dragscroll';
 
@@ -42,15 +42,15 @@ const props = defineProps({
   node_props: Array,
 });
 
-const title = ref(props.title_props);
-const nodes = ref(props.node_props);
-const lines = ref([]);
+const title: any = ref(props.title_props);
+const nodes: any = ref(props.node_props);
+const lines: any = ref([]);
 let count = 0;
-const focus = ref(null);
-const LeaderLine = window.LeaderLine;
-const isEditing = ref()
+const focus: any = ref(null);
+const LeaderLine: any = window.LeaderLine;
+const isEditing: any = ref()
 isEditing.value = false
-const plusButton = ref(true)
+const plusButton: any = ref(true)
 
 const right_append = (rap_node, node_text, node_childes, node_selector) => {
   node_selector.appendChild(node_text);
@@ -98,52 +98,10 @@ const makeFromChild = (el, node_text, rap_node, node_childes, node_selector) => 
   return { rap_node, node_text, node_childes };
 };
 
-const makeline = (el, direction, parent) => {
-  let line = new LeaderLine(
-    document.getElementById(parent),
-    LeaderLine.pointAnchor(document.getElementById(`node${el.id}`), { x: '50%', y: '50%' })
-  );
-  line.path = 'magnet';
-  line.endPlug = 'behind';
-
-  const elmWrapper = document.getElementById('line-wrapper');
-  const el_line = document.querySelectorAll('.leader-line');
-
-  const position = () => {
-    elmWrapper.style.transform = 'none';
-    const rectWrapper = elmWrapper.getBoundingClientRect();
-    elmWrapper.style.transform = `translate(${(rectWrapper.left + pageXOffset) * -1}px, ${(rectWrapper.top + pageYOffset) * -1}px)`;
-    line.position();
-  };
-
-  elmWrapper.appendChild(el_line[el_line.length - 1]);
-  position();
-  lines.value.push(el_line[el_line.length - 1]);
-};
-
-const makelines = () => {
-  const right = 1;
-  const left = 99;
-
-  nodes.value.forEach(el => {
-    if (el.parent === 'title') {
-      if (el.direction === 'right') {
-        makeline(el, right, 'title');
-      } else {
-        makeline(el, left, 'title');
-      }
-    } else {
-      if (el.direction === 'right') {
-        makeline(el, right, `node${el.parent}`);
-      } else {
-        makeline(el, left, `node${el.parent}`);
-      }
-    }
-  });
-};
+import { makelines } from '@/composables/lineUtils';
 
 const removelines = () => {
-  lines.value.forEach(el => {
+  lines.value.forEach((el: any) => {
     el.parentNode.removeChild(el);
   });
   lines.value.length = 0;
@@ -151,7 +109,7 @@ const removelines = () => {
 
 const line_reset = () => {
   removelines();
-  makelines();
+  lines.value = makelines(LeaderLine, nodes.value);
 };
 
 const input_node = () => {
@@ -399,7 +357,7 @@ const createChildNode = () => {
   isEditing.value = true
 
   removelines();
-  makelines();
+  lines.value = makelines(LeaderLine, nodes.value);
 };
 
 const createNewNode = (el) => {
@@ -479,7 +437,7 @@ onMounted(() => {
 
   nodes.value.forEach(createNewNode)
 
-  makelines();
+  lines.value = makelines(LeaderLine, nodes.value);
 
   el_title_selector.addEventListener('keydown', (e) => {
     if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
