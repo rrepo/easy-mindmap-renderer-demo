@@ -65,7 +65,7 @@
 
 </template>
 
-<script setup>
+<script setup lang="ts">
 import MindMap from './components/MindMap.vue';
 </script>
 
@@ -81,9 +81,9 @@ body {
 }
 
 .rapmap {
-  width: 100vh;
+  width: 100%;
   height: 100vh;
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid #000;
 }
 </style>
