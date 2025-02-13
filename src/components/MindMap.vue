@@ -61,8 +61,8 @@ const line_reset = () => {
 };
 
 const input_node = () => {
-  const el = document.getElementById('title');
-  const selection = window.getSelection();
+  const el: any = document.getElementById('title');
+  const selection: any = window.getSelection();
   const range = document.createRange();
   selection.removeAllRanges();
   range.selectNodeContents(el);
@@ -141,7 +141,7 @@ const focus_node = () => {
   }
 };
 
-const move_focus = (e) => {
+const move_focus = (e: any) => {
   if (e.keyCode === 9) { // Tab key code
     let currentFocus = focus.value;
     let nextFocus = null;
@@ -173,7 +173,7 @@ const move_focus = (e) => {
       if (!isEditing.value) {
         editableNode.focus();
         const range = document.createRange();
-        const selection = window.getSelection();
+        const selection: any = window.getSelection();
         range.selectNodeContents(editableNode); // 要素内のすべての内容を選択
         range.collapse(false); // 範囲を折りたたんで一番後ろにカーソルを移動
         selection.removeAllRanges(); // 既存の選択範囲をクリア
@@ -188,11 +188,11 @@ const move_focus = (e) => {
   }
 };
 
-const move_focus_in_direction = (direction) => {
+const move_focus_in_direction = (direction: any) => {
   let currentFocus = focus.value;
-  let nextFocus = null;
+  let nextFocus: any = null;
 
-  const activeEditable = document.activeElement;
+  const activeEditable: any = document.activeElement;
   if (activeEditable && activeEditable.isContentEditable) {
     return; // 編集中の場合は何もしない
   }
@@ -360,15 +360,15 @@ const createNewNode = (el: any) => {
     line_reset();
   });
 
-  el_selector.addEventListener('click', (e) => {
+  el_selector.addEventListener('click', (e: any) => {
     update_focus(e);
   });
 
-  el_selector.addEventListener('dblclick', (e) => {
+  el_selector.addEventListener('dblclick', (e: any) => {
     input_node_test(e.srcElement.id.substr(8));
   });
 
-  el_selector.addEventListener('keydown', (e) => {
+  el_selector.addEventListener('keydown', (e: any) => {
     if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
       input_node_test(e.srcElement.id.substr(8));
     }
@@ -395,7 +395,7 @@ onMounted(() => {
 
   lines.value = makelines(LeaderLine, nodes.value);
 
-  el_title_selector.addEventListener('keydown', (e) => {
+  el_title_selector.addEventListener('keydown', (e: any) => {
     if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
       input_node(e);
     }
