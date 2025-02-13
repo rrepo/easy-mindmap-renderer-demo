@@ -305,7 +305,7 @@ const createChildNode = () => {
   update_focus({ srcElement: document.getElementById("selector" + newNode.id) });
   focus_node();
   const newFocus: any = document.getElementById("node" + newNode.id)
-  // newFocus.focus();
+  newFocus.focus();
 
   isEditing.value = true
 
