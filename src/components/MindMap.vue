@@ -410,10 +410,25 @@ onMounted(() => {
   el_title.addEventListener('blur', () => {
     el_edge.addEventListener('scroll', focus_node);
   });
+
+  const edge: any = document.querySelector('.edge');
+  let scale = 1;
+
+  edge.addEventListener('wheel', (event: any) => {
+    event.preventDefault(); // デフォルトのスクロールを無効化
+    const zoomSpeed = 0.1;  // ズーム速度調整
+    if (event.deltaY < 0) {
+      scale *= 1 + zoomSpeed; // ズームイン
+    } else {
+      scale *= 1 - zoomSpeed; // ズームアウト
+    }
+    scale = Math.max(0.5, Math.min(scale, 3)); // 拡大縮小の範囲を制限
+    edge.style.transform = `scale(${scale})`;
+  });
 });
+
+
 </script>
-
-
 
 <style>
 #line-wrapper {
@@ -426,9 +441,12 @@ onMounted(() => {
 }
 
 .edge {
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
+  /* width: 100%;
+  height: 100vh; */
+  width: 300vw;
+  height: 300vh;
+  overflow: auto;
+  background-color: #F5F5F5;
   /* border: 1px solid #000; */
 }
 

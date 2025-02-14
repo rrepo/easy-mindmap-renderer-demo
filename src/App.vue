@@ -1,5 +1,5 @@
 <template>
-  <div class="rapmap">
+  <div>
     <MindMap title_props="title" :node_props="[
       {
         'id': 0,
@@ -83,7 +83,7 @@ body {
 .rapmap {
   width: 100%;
   height: 100vh;
-  overflow: visible;
+  overflow: hidden;
   border: 1px solid #000;
 }
 </style>
