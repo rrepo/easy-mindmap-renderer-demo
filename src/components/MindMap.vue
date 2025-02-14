@@ -38,7 +38,7 @@ import { onMounted, ref } from 'vue';
 // import { dragscroll } from 'vue-dragscroll';
 
 import { makelines, removeline, LineReset } from '@/composables/lineUtils';
-import { rightAppend, leftAppend, makeFromParent, makeFromChild } from '@/composables/nodeUtils';
+import { rightAppend, leftAppend, makeFromParent, makeFromChild, focusNode } from '@/composables/nodeUtils';
 import { inputTitle, inputNode } from '@/composables/nodeFuncUtils';
 
 const props = defineProps({
@@ -57,8 +57,7 @@ isEditing.value = false
 const plusButton: any = ref(true)
 
 const line_reset = () => {
-  lines.value = removeline(lines.value);
-  lines.value = makelines(LeaderLine, nodes.value);
+  lines.value = LineReset(LeaderLine, lines.value, nodes.value);
 };
 
 const update_focus = (e) => {
