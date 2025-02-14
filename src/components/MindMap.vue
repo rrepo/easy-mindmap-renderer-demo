@@ -11,7 +11,7 @@
 
       <div class="center">
         <div class="title_node_rap">
-          <div id="selector" class="selector" tabindex="0" @click="update_focus" @dblclick="input_node"
+          <div id="selector" class="selector" tabindex="0" @click="update_focus" @dblclick="inputTitle"
             @keydown="move_focus">
             <div id="title" class="title_nodes" contenteditable="true" @blur="line_reset">
               {{ title }}
@@ -39,6 +39,7 @@ import { onMounted, ref } from 'vue';
 
 import { makelines, removeline } from '@/composables/lineUtils';
 import { rightAppend, leftAppend, makeFromParent, makeFromChild } from '@/composables/nodeUtils';
+import { inputTitle, inputNode } from '@/composables/nodeFuncUtils';
 
 const props = defineProps({
   title_props: String,
@@ -58,31 +59,6 @@ const plusButton: any = ref(true)
 const line_reset = () => {
   lines.value = removeline(lines.value);
   lines.value = makelines(LeaderLine, nodes.value);
-};
-
-const input_node = () => {
-  const el: any = document.getElementById('title');
-  const selection: any = window.getSelection();
-  const range = document.createRange();
-  selection.removeAllRanges();
-  range.selectNodeContents(el);
-  range.collapse(false);
-  selection.addRange(range);
-  el.focus();
-  return false;
-};
-
-const input_node_test = (e) => {
-  const target = document.getElementById(`node${e}`);
-  target.focus();
-  const selection = window.getSelection();
-  const range = document.createRange();
-  selection.removeAllRanges();
-  range.selectNodeContents(target);
-  range.collapse(false);
-  selection.addRange(range);
-  target.focus();
-  return false;
 };
 
 const update_focus = (e) => {
@@ -365,12 +341,12 @@ const createNewNode = (el: any) => {
   });
 
   el_selector.addEventListener('dblclick', (e: any) => {
-    input_node_test(e.srcElement.id.substr(8));
+    inputNode(e.srcElement.id.substr(8));
   });
 
   el_selector.addEventListener('keydown', (e: any) => {
     if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
-      input_node_test(e.srcElement.id.substr(8));
+      inputNode(e.srcElement.id.substr(8));
     }
     move_focus(e); // Call move_focus to handle Tab key navigation and Arrow keys
   });
@@ -397,7 +373,7 @@ onMounted(() => {
 
   el_title_selector.addEventListener('keydown', (e: any) => {
     if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
-      input_node(e);
+      inputTitle();
     }
   });
 
