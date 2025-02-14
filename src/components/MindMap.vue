@@ -37,7 +37,7 @@
 import { onMounted, ref } from 'vue';
 // import { dragscroll } from 'vue-dragscroll';
 
-import { makelines, removeline } from '@/composables/lineUtils';
+import { makelines, removeline, LineReset } from '@/composables/lineUtils';
 import { rightAppend, leftAppend, makeFromParent, makeFromChild } from '@/composables/nodeUtils';
 import { inputTitle, inputNode } from '@/composables/nodeFuncUtils';
 
@@ -285,7 +285,7 @@ const createChildNode = () => {
 
   isEditing.value = true
 
-  line_reset();
+  lines.value = LineReset(LeaderLine, lines.value, nodes.value)
 };
 
 const createNewNode = (el: any) => {
@@ -333,7 +333,7 @@ const createNewNode = (el: any) => {
   const el_selector: any = document.getElementById(`selector${el.id}`);
 
   el_node.addEventListener('blur', () => {
-    line_reset();
+    lines.value = LineReset(LeaderLine, lines.value, nodes.value)
   });
 
   el_selector.addEventListener('click', (e: any) => {

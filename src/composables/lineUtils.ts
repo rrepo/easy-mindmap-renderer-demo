@@ -45,3 +45,9 @@ export const removeline = (lines: any): any => {
   lines.length = 0;
   return lines;
 }
+
+export const LineReset = (LeaderLine: any, lines: any, nodes: any): any => {
+  lines = removeline(lines);
+  lines = makelines(LeaderLine, nodes);
+  return lines;
+}

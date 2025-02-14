@@ -41,6 +41,10 @@ export const makeFromChild = (nodes: any, el: any, node_text: any, rap_node: any
   margin_rap_node.appendChild(rap_node);
   margin_rap_node.classList.add('margin_c_nodes');
   parent.appendChild(margin_rap_node);
-  return { rap_node, node_text, node_childes };
+  // return { rap_node, node_text, node_childes };
 };
 
+export const focusNode = (focus: any) => {
+  focus.focus()
+  return focus
+}
