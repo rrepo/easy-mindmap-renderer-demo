@@ -411,10 +411,9 @@ onMounted(() => {
     el_edge.addEventListener('scroll', focus_node);
   });
 
-  const edge: any = document.querySelector('.edge');
   let scale = 1;
 
-  edge.addEventListener('wheel', (event: any) => {
+  el_edge.addEventListener('wheel', (event: any) => {
     event.preventDefault(); // デフォルトのスクロールを無効化
     const zoomSpeed = 0.1;  // ズーム速度調整
     if (event.deltaY < 0) {
@@ -423,7 +422,7 @@ onMounted(() => {
       scale *= 1 - zoomSpeed; // ズームアウト
     }
     scale = Math.max(0.5, Math.min(scale, 3)); // 拡大縮小の範囲を制限
-    edge.style.transform = `scale(${scale})`;
+    el_edge.style.transform = `scale(${scale})`;
   });
 });
 
