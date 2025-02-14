@@ -645,8 +645,8 @@ onMounted(() => {
 
 .plus-button {
   position: relative;
-  top: 28%;
-  left: 100%;
+  top: calc(50% - 15px);
+  left: calc(100% + 10px);
   font-size: 24px;
   background-color: #00aaff;
   color: white;
