@@ -13,7 +13,7 @@
         <div class="title_node_rap">
           <div id="selector" class="selector" tabindex="0" @click="update_focus" @dblclick="inputTitle"
             @keydown="move_focus">
-            <div id="title" class="title_nodes" contenteditable="true" @blur="line_reset">
+            <div id="title" class="title_nodes" contenteditable="true" @blur="onLineReset">
               {{ title }}
             </div>
           </div>
@@ -36,6 +36,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 // import { dragscroll } from 'vue-dragscroll';
+import plusSvg from '@/assets/icons/plus-solid.svg';
+import trashSvg from '@/assets/icons/trash-solid.svg';
+import allowSvg from '@/assets/icons/up-down-left-right-soild.svg';
 
 import { makelines, removeline, LineReset } from '@/composables/lineUtils';
 import { rightAppend, leftAppend, makeFromParent, makeFromChild, focusNode } from '@/composables/nodeUtils';
@@ -56,7 +59,7 @@ const isEditing: any = ref()
 isEditing.value = false
 const plusButton: any = ref(true)
 
-const line_reset = () => {
+const onLineReset = () => {
   lines.value = LineReset(LeaderLine, lines.value, nodes.value);
 };
 
@@ -90,19 +93,36 @@ const update_focus = (e) => {
     wrapper.style.left = "0";
     focus.value.appendChild(wrapper); // focusの中にラップ要素を追加
 
-    // 新しいボタンを作成
-    const button = document.createElement("button");
-    button.textContent = "✚";
-    button.className = "plus-button";
-    button.style.position = "relative"; // ボタンをラップ内で相対位置に配置
+    // 新しい+ボタンを作成
+    const plusChildButton: any = document.createElement("button");
+
+    const plus = document.createElement("img");
+    plus.src = plusSvg;
+    plusChildButton.appendChild(plus);
+    plusChildButton.className = "plus-button";
+    plusChildButton.style.position = "relative";
 
     // ボタンをラップ要素に追加
-    wrapper.appendChild(button);
+    wrapper.appendChild(plusChildButton);
 
     // ボタンクリック時の動作を設定
-    button.addEventListener("click", () => {
+    plusChildButton.addEventListener("click", () => {
       createChildNode()
     });
+
+    // 削除ボタン
+    const deleteButton: any = document.createElement("delete-button");
+    const deleteImg = document.createElement("img");
+    deleteImg.style.width = "18px";
+    deleteImg.style.height = "18px";
+    // deleteImg.style.filter = "invert(1)"; // 画像を反転（白色に近い）
+    deleteImg.src = trashSvg;
+    deleteButton.appendChild(deleteImg);
+    deleteButton.className = "delete-button";
+    deleteButton.style.position = "relative";
+
+    wrapper.appendChild(deleteButton);
+
 
     // 新しいラップ要素を保存
     plusButton.value = wrapper;
@@ -358,6 +378,10 @@ const createNewNode = (el: any) => {
     el_edge.addEventListener('scroll', focus_node);
   });
 }
+
+const deleteNode = (e: any) => {
+  console.log(focus.value)
+};
 
 onMounted(() => {
   const el_title: any = document.getElementById('title');
@@ -648,5 +672,25 @@ onMounted(() => {
   top: 45%;
   left: -30px;
   z-index: -100;
+}
+
+.delete-button {
+  position: relative;
+  top: calc(0% + 25px);
+  left: calc(100% + 10px);
+  font-size: 24px;
+  background-color: #c61e29;
+  color: white;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  z-index: 30;
+  pointer-events: auto;
 }
 </style>

@@ -1,5 +1,8 @@
 <template>
   <div>
+    <!-- <img :src=imageSrc alt="Icon" height="30px" width="30px"/> -->
+
+
     <MindMap title_props="title" :node_props="[
       {
         'id': 0,
@@ -67,6 +70,7 @@
 
 <script setup lang="ts">
 import MindMap from './components/MindMap.vue';
+import imageSrc from '@/assets/icons/plus-solid.svg'; 
 </script>
 
 <style>
