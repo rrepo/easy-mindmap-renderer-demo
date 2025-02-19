@@ -38,7 +38,7 @@ import { onMounted, ref } from 'vue';
 // import { dragscroll } from 'vue-dragscroll';
 import plusSvg from '@/assets/icons/plus-solid.svg';
 import trashSvg from '@/assets/icons/trash-solid.svg';
-import allowSvg from '@/assets/icons/up-down-left-right-soild.svg';
+import allowSvg from '@/assets/icons/up-down-left-right-solid.svg';
 
 import { makelines, removeline, LineReset } from '@/composables/lineUtils';
 import { rightAppend, leftAppend, makeFromParent, makeFromChild, focusNode } from '@/composables/nodeUtils';
@@ -95,11 +95,24 @@ const update_focus = (e) => {
 
     // 新しい+ボタンを作成
     const plusChildButton: any = document.createElement("button");
+    wrapper.style.right = "100%";
+
+    let id = focus.value.id.replace("selector", "");
+    const node = nodes.value.find((node: any) => node.id == id)
+
+    if (id == "") {
+      id = "title"
+      plusChildButton.className = "plus-button-right";
+    } else if (node.direction == "right") {
+      plusChildButton.className = "plus-button-right";
+    } else {
+      plusChildButton.className = "plus-button-left";
+    }
 
     const plus = document.createElement("img");
     plus.src = plusSvg;
     plusChildButton.appendChild(plus);
-    plusChildButton.className = "plus-button";
+    plusChildButton.classList.add("plus-button");
     plusChildButton.style.position = "relative";
 
     // ボタンをラップ要素に追加
@@ -110,18 +123,38 @@ const update_focus = (e) => {
       createChildNode()
     });
 
+
     // 削除ボタン
-    const deleteButton: any = document.createElement("delete-button");
+    const deleteButton: any = document.createElement("button");
     const deleteImg = document.createElement("img");
-    deleteImg.style.width = "18px";
-    deleteImg.style.height = "18px";
-    // deleteImg.style.filter = "invert(1)"; // 画像を反転（白色に近い）
+    // deleteImg.style.width = "18px";
+    // deleteImg.style.height = "18px";
     deleteImg.src = trashSvg;
     deleteButton.appendChild(deleteImg);
     deleteButton.className = "delete-button";
     deleteButton.style.position = "relative";
 
     wrapper.appendChild(deleteButton);
+
+    // 下にノード追加
+    const plusSiblingButton: any = document.createElement("button");
+    const plusSiblingImg = document.createElement("img");
+    plusSiblingImg.src = plusSvg;
+    plusSiblingButton.appendChild(plusSiblingImg);
+    plusSiblingButton.className = "plus-sibling-button";
+    plusSiblingButton.style.position = "relative";
+
+    wrapper.appendChild(plusSiblingButton);
+
+    // 移動ボタン
+    const moveButton: any = document.createElement("button");
+    const moveImg = document.createElement("img");
+    moveImg.src = allowSvg;
+    moveButton.appendChild(moveImg);
+    moveButton.className = "move-button";
+    moveButton.style.position = "relative";
+
+    wrapper.appendChild(moveButton);
 
 
     // 新しいラップ要素を保存
@@ -645,7 +678,7 @@ onMounted(() => {
 .plus-button {
   position: relative;
   top: calc(50% - 15px);
-  left: calc(100% + 10px);
+  /* left: calc(100% + 10px); */
   font-size: 24px;
   background-color: #00aaff;
   color: white;
@@ -662,24 +695,60 @@ onMounted(() => {
   pointer-events: auto;
 }
 
-.plus-button::before {
-  content: '';
-  position: absolute;
-  /* width: 35px; */
-  /* height: 6px; */
-  background-color: #00aaff;
+.plus-button-right {
+  left: calc(100% + 10px);
+}
 
-  top: 45%;
-  left: -30px;
-  z-index: -100;
+.plus-button-left {
+  left: calc(0% - 40px);
 }
 
 .delete-button {
   position: relative;
-  top: calc(0% + 25px);
+  top: calc(100% - 20.5px);
   left: calc(100% + 10px);
   font-size: 24px;
   background-color: #c61e29;
+  color: white;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  z-index: 30;
+  pointer-events: auto;
+}
+
+.plus-sibling-button {
+  position: relative;
+  top: calc(100% - 51px);
+  left: calc(50% - 15px);
+  font-size: 24px;
+  background-color: #00aaff;
+  color: white;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  z-index: 30;
+  pointer-events: auto;
+}
+
+.move-button {
+  position: relative;
+  top: calc(0% - 129px);
+  left: calc(50% - 15px);
+  font-size: 24px;
+  background-color: #00aaff;
   color: white;
   font-weight: bold;
   border-radius: 50%;
