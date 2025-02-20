@@ -42,7 +42,7 @@ import allowSvg from '@/assets/icons/up-down-left-right-solid.svg';
 
 import { makelines, removeline, LineReset } from '@/composables/lineUtils';
 import { rightAppend, leftAppend, makeFromParent, makeFromChild, focusNode } from '@/composables/nodeUtils';
-import { inputTitle, inputNode } from '@/composables/nodeFuncUtils';
+import { inputTitle, inputNode, createButton } from '@/composables/nodeFuncUtils';
 
 const props = defineProps({
   title_props: String,
@@ -91,32 +91,31 @@ const update_focus = (e) => {
     wrapper.style.position = "absolute"; // ラップ要素を絶対位置で配置
     wrapper.style.top = "0";
     wrapper.style.left = "0";
-    focus.value.appendChild(wrapper); // focusの中にラップ要素を追加
-
-    // 新しい+ボタンを作成
-    const plusChildButton: any = document.createElement("button");
     wrapper.style.right = "100%";
+    focus.value.appendChild(wrapper); // focusの中にラップ要素を追加
 
     let id = focus.value.id.replace("selector", "");
     const node = nodes.value.find((node: any) => node.id == id)
 
+    // 新しいボタンを作成
+    const plusChildButton: any = document.createElement("button");
+    const deleteButton: any = document.createElement("button");
+
     if (id == "") {
       id = "title"
       plusChildButton.className = "plus-button-right";
+      deleteButton.className = "plus-button-right";
     } else if (node.direction == "right") {
       plusChildButton.className = "plus-button-right";
+      deleteButton.className = "plus-button-right";
     } else {
       plusChildButton.className = "plus-button-left";
+      deleteButton.className = "plus-button-left";
     }
 
-    const plus = document.createElement("img");
-    plus.src = plusSvg;
-    plusChildButton.appendChild(plus);
-    plusChildButton.classList.add("plus-button");
-    plusChildButton.style.position = "relative";
-
     // ボタンをラップ要素に追加
-    wrapper.appendChild(plusChildButton);
+    wrapper.appendChild(createButton(plusChildButton, plusSvg, "plus-button"));
+    wrapper.appendChild(createButton(deleteButton, trashSvg, "delete-button"));
 
     // ボタンクリック時の動作を設定
     plusChildButton.addEventListener("click", () => {
@@ -124,38 +123,14 @@ const update_focus = (e) => {
     });
 
 
-    // 削除ボタン
-    const deleteButton: any = document.createElement("button");
-    const deleteImg = document.createElement("img");
-    // deleteImg.style.width = "18px";
-    // deleteImg.style.height = "18px";
-    deleteImg.src = trashSvg;
-    deleteButton.appendChild(deleteImg);
-    deleteButton.className = "delete-button";
-    deleteButton.style.position = "relative";
-
-    wrapper.appendChild(deleteButton);
 
     // 下にノード追加
     const plusSiblingButton: any = document.createElement("button");
-    const plusSiblingImg = document.createElement("img");
-    plusSiblingImg.src = plusSvg;
-    plusSiblingButton.appendChild(plusSiblingImg);
-    plusSiblingButton.className = "plus-sibling-button";
-    plusSiblingButton.style.position = "relative";
-
-    wrapper.appendChild(plusSiblingButton);
+    wrapper.appendChild(createButton(plusSiblingButton, plusSvg, "plus-sibling-button"));
 
     // 移動ボタン
     const moveButton: any = document.createElement("button");
-    const moveImg = document.createElement("img");
-    moveImg.src = allowSvg;
-    moveButton.appendChild(moveImg);
-    moveButton.className = "move-button";
-    moveButton.style.position = "relative";
-
-    wrapper.appendChild(moveButton);
-
+    wrapper.appendChild(createButton(moveButton, allowSvg, "move-button"));
 
     // 新しいラップ要素を保存
     plusButton.value = wrapper;
@@ -706,7 +681,6 @@ onMounted(() => {
 .delete-button {
   position: relative;
   top: calc(100% - 20.5px);
-  left: calc(100% + 10px);
   font-size: 24px;
   background-color: #c61e29;
   color: white;

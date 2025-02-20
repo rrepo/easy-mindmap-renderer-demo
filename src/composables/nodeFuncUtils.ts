@@ -20,3 +20,13 @@ export const inputNode = (e: any): any => {
   selection.addRange(range);
   target.focus();
 }
+
+export const createButton = (button: any, svg: any, cssClass: any): any => {
+  const svgEl = document.createElement("img");
+  svgEl.src = svg;
+  button.appendChild(svgEl);
+  button.classList.add(cssClass);
+  button.style.position = "relative";
+
+  return button;
+}
