@@ -122,7 +122,9 @@ const update_focus = (e) => {
       createChildNode()
     });
 
-
+    deleteButton.addEventListener("click", () => {
+      deleteNode()
+    });
 
     // 下にノード追加
     const plusSiblingButton: any = document.createElement("button");
@@ -287,11 +289,14 @@ const createChildNode = () => {
   if (!focus.value) return;
 
   let parentNodeId = focus.value.id.replace("selector", "");
+  let paredentNode = null
+
   if (parentNodeId == "") {
     parentNodeId = "title"
+    paredentNode = "title"
+  } else {
+    paredentNode = nodes.value.find((node: any) => node.id == parentNodeId)
   }
-
-  const paredentNode = nodes.value.find((node: any) => node.id == parentNodeId)
 
   // 新しいノードの情報を生成
   const newNode = {
@@ -387,9 +392,18 @@ const createNewNode = (el: any) => {
   });
 }
 
-const deleteNode = (e: any) => {
-  console.log(focus.value)
-};
+const deleteNode = () => {
+  let id = Number(focus.value.id.replace("selector", ""))
+  console.log(nodes.value);
+
+  focus.value.remove();
+  onLineReset()
+
+  nodes.value = nodes.value.filter((n: any) => n.id !== id);
+  console.log(nodes.value)
+
+}
+
 
 onMounted(() => {
   const el_title: any = document.getElementById('title');
