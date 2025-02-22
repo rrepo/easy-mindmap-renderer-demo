@@ -39,6 +39,8 @@ import { onMounted, ref } from 'vue';
 import plusSvg from '@/assets/icons/plus-solid.svg';
 import trashSvg from '@/assets/icons/trash-solid.svg';
 import allowSvg from '@/assets/icons/up-down-left-right-solid.svg';
+import EightAllowSvg from '@/assets/icons/8Arrows.svg'
+import moveSvg from '@/assets/icons/move-svgrepo-com.svg'
 
 import { makelines, removeline, LineReset } from '@/composables/lineUtils';
 import { rightAppend, leftAppend, makeFromParent, makeFromChild, focusNode } from '@/composables/nodeUtils';
@@ -132,7 +134,7 @@ const update_focus = (e) => {
 
     // 移動ボタン
     const moveButton: any = document.createElement("button");
-    wrapper.appendChild(createButton(moveButton, allowSvg, "move-button"));
+    wrapper.appendChild(createButton(moveButton, moveSvg, "move-button"));
 
     // 新しいラップ要素を保存
     plusButton.value = wrapper;
@@ -359,7 +361,7 @@ const createNewNode = (el: any) => {
   } else {
     makeFromChild(nodes.value, el, node_text, rap_node, node_childes, node_selector);
   }
-  
+
   const el_node: any = document.getElementById(`node${el.id}`);
   const el_selector: any = document.getElementById(`selector${el.id}`);
 
