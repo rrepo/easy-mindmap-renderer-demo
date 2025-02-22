@@ -343,24 +343,23 @@ const createNewNode = (el: any) => {
   if (el.parent === 'title') {
     if (count.value % 2 === 0) {
       const nodeFromParent = makeFromParent(node_text, rap_node, node_childes);
-      count.value++
 
       rightAppend(nodeFromParent.rap_node, nodeFromParent.node_text, nodeFromParent.node_childes, node_selector);
       right.appendChild(nodeFromParent.rap_node);
       el.direction = 'right';
     } else {
       const nodeFromParent = makeFromParent(node_text, rap_node, node_childes);
-      count.value++
 
       leftAppend(nodeFromParent.rap_node, nodeFromParent.node_text, nodeFromParent.node_childes, node_selector);
       left.appendChild(nodeFromParent.rap_node);
       node_childes.classList.add('margin-left');
       el.direction = 'left';
     }
+    count.value++
   } else {
     makeFromChild(nodes.value, el, node_text, rap_node, node_childes, node_selector);
   }
-
+  
   const el_node: any = document.getElementById(`node${el.id}`);
   const el_selector: any = document.getElementById(`selector${el.id}`);
 

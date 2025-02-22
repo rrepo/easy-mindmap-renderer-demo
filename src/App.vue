@@ -60,6 +60,41 @@
         'parent': '5',
         'direction': ''
       },
+      // {
+      //   'id': 8,
+      //   'text': 'ch8',
+      //   'url': '',
+      //   'parent': 'title',
+      //   'direction': ''
+      // },
+      // {
+      //   'id': 9,
+      //   'text': 'ch9',
+      //   'url': '',
+      //   'parent': 'title',
+      //   'direction': ''
+      // },
+      // {
+      //   'id': 10,
+      //   'text': 'ch10',
+      //   'url': '',
+      //   'parent': 'title',
+      //   'direction': ''
+      // },
+      // {
+      //   'id': 11,
+      //   'text': 'ch11',
+      //   'url': '',
+      //   'parent': '8',
+      //   'direction': ''
+      // },
+      // {
+      //   'id': 12,
+      //   'text': 'ch12',
+      //   'url': '',
+      //   'parent': '11',
+      //   'direction': ''
+      // },
     ]">
 
     </MindMap>
@@ -70,7 +105,6 @@
 
 <script setup lang="ts">
 import MindMap from './components/MindMap.vue';
-import imageSrc from '@/assets/icons/plus-solid.svg'; 
 </script>
 
 <style>

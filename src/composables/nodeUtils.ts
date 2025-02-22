@@ -24,7 +24,8 @@ export const makeFromChild = (nodes: any, el: any, node_text: any, rap_node: any
   const parent: any = document.getElementById(el.parent);
   node_text.classList.add('c_nodes');
 
-  el.direction = nodes[el.parent].direction;
+  const parentNode = nodes.find((node: any) => node.id == el.parent)
+  el.direction = parentNode.direction;
 
   if (el.direction === 'right') {
     rightAppend(rap_node, node_text, node_childes, node_selector);
