@@ -402,20 +402,23 @@ const deleteNode = () => {
   }
   const newNodes = removeElementsAtIndices(nodes.value, result);
 
+  result.push(id)
+
   result.forEach((node: any) => {
     const el: any = document.getElementById(`selector${node}`)
     el.remove()
   })
 
+  document.getElementById(`selector-margin${id}`).remove()
+
   nodes.value = newNodes
-  if (document.getElementById(`selector${id}`) && document.getElementById(`selector-margin${id}`)) {
-    document.getElementById(`selector${id}`).remove()
-    document.getElementById(`selector-margin${id}`).remove()
+
+  function removeElementAtIndex(arr: any, index: any) {
+    return arr.filter((_, i) => i !== index);
   }
 
-  console.log(nodes.value)
+  nodes.value = removeElementAtIndex(nodes.value, id);
 
-  onLineReset()
   onLineReset()
 }
 
