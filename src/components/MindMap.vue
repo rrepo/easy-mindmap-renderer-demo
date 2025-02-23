@@ -394,31 +394,25 @@ const createNewNode = (el: any) => {
 }
 
 const deleteNode = () => {
+  console.log(nodes.value)
+
   let id = Number(focus.value.id.replace("selector", ""))
   const result = getDescendants(nodes.value, id)
+  const newNodes = result.mainNodes
+  const removeNodes = result.descendantNodes
 
-  const removeElementsAtIndices = (arr: any, indices: any) => {
-    return arr.filter((_: any, i: any) => !indices.includes(i));
-  }
-  const newNodes = removeElementsAtIndices(nodes.value, result);
+  console.log(newNodes, removeNodes)
+  nodes.value = newNodes
 
-  result.push(id)
-
-  result.forEach((node: any) => {
+  removeNodes.forEach((node: any) => {
     const el: any = document.getElementById(`selector${node}`)
     el.remove()
   })
 
-  document.getElementById(`selector-margin${id}`).remove()
-
-  nodes.value = newNodes
-
-  function removeElementAtIndex(arr: any, index: any) {
-    return arr.filter((_, i) => i !== index);
+  const selectorMargin = document.getElementById(`selector-margin${id}`)
+  if (selectorMargin) {
+    selectorMargin.remove()
   }
-
-  nodes.value = removeElementAtIndex(nodes.value, id);
-
   onLineReset()
 }
 
