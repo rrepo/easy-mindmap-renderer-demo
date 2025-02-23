@@ -396,9 +396,6 @@ const createNewNode = (el: any) => {
 const deleteNode = () => {
   let id = Number(focus.value.id.replace("selector", ""))
   const result = getDescendants(nodes.value, id)
-  console.log(result)
-
-
 
   const removeElementsAtIndices = (arr: any, indices: any) => {
     return arr.filter((_: any, i: any) => !indices.includes(i));
@@ -406,15 +403,17 @@ const deleteNode = () => {
   const newNodes = removeElementsAtIndices(nodes.value, result);
 
   result.forEach((node: any) => {
-    console.log(node)
     const el: any = document.getElementById(`selector${node}`)
-    console.log(el)
     el.remove()
   })
 
-  console.log(newNodes)
   nodes.value = newNodes
-  document.getElementById(`selector${id}`).remove()
+  if (document.getElementById(`selector${id}`) && document.getElementById(`selector-margin${id}`)) {
+    document.getElementById(`selector${id}`).remove()
+    document.getElementById(`selector-margin${id}`).remove()
+  }
+
+  console.log(nodes.value)
 
   onLineReset()
   onLineReset()

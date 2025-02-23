@@ -20,6 +20,7 @@ export const makeFromParent = (node_text: any, rap_node: any, node_childes: any)
 export const makeFromChild = (nodes: any, el: any, node_text: any, rap_node: any, node_childes: any, node_selector: any) => {
   const margin_rap_node = document.createElement('div');
   margin_rap_node.classList.add('selector');
+  margin_rap_node.id = `selector-margin${el.id}`;
 
   const parent: any = document.getElementById(el.parent);
   node_text.classList.add('c_nodes');
