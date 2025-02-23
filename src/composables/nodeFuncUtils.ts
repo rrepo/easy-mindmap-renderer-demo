@@ -30,3 +30,19 @@ export const createButton = (button: any, svg: any, cssClass: any): any => {
 
   return button;
 }
+
+export const getDescendants = (nodes: any[], parentId: number): number[] => {
+  const result: number[] = [];
+
+  const traverse = (nodeId: number) => {
+    for (const node of nodes) {
+      if (Number(node.parent) === nodeId) {
+        result.push(node.id);
+        traverse(node.id);
+      }
+    }
+  }
+
+  traverse(parentId);
+  return result;
+}
