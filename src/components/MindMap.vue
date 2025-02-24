@@ -302,7 +302,7 @@ const createChildNode = () => {
 
   // 新しいノードの情報を生成
   const newNode = {
-    id: nodes.value.length + 1, // 新しいID
+    id: nodes.value[nodes.value.length - 1].id + 1,
     text: nodes.value.length + 1, // デフォルトテキスト
     parent: parentNodeId, // 親ノード
     direction: paredentNode.direction,
@@ -405,9 +405,9 @@ const deleteNode = () => {
   nodes.value = newNodes
 
   if (node.parent == "title") {
-    console.log(node.parent)
     const rap = document.getElementById(`rap-node${node.id}`)
     rap?.remove()
+    count.value--
   } else {
     removeNodes.forEach((node: any) => {
       const el: any = document.getElementById(`selector${node}`)
