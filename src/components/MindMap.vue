@@ -334,6 +334,7 @@ const createNewNode = (el: any) => {
   node_selector.tabIndex = '0';
 
   const rap_node = document.createElement('div');
+  rap_node.id = `rap-node${el.id}`;
   const node_childes = document.createElement('div');
   const text = document.createTextNode(el.text);
   node_text.contentEditable = true;
@@ -397,22 +398,34 @@ const deleteNode = () => {
   console.log(nodes.value)
 
   let id = Number(focus.value.id.replace("selector", ""))
+  console.log(id)
+
+  const node = nodes.value.find((node: any) => node.id == id)
+  console.log(node)
+
   const result = getDescendants(nodes.value, id)
   const newNodes = result.mainNodes
   const removeNodes = result.descendantNodes
 
-  console.log(newNodes, removeNodes)
   nodes.value = newNodes
 
-  removeNodes.forEach((node: any) => {
-    const el: any = document.getElementById(`selector${node}`)
-    el.remove()
-  })
+  if (node.parent == "title") {
+    console.log(node.parent)
+    const rap = document.getElementById(`rap-node${node.id}`)
+    console.log(rap)
+    rap?.remove()
+  } else {
+    removeNodes.forEach((node: any) => {
+      const el: any = document.getElementById(`selector${node}`)
+      el.remove()
+    })
 
-  const selectorMargin = document.getElementById(`selector-margin${id}`)
-  if (selectorMargin) {
-    selectorMargin.remove()
+    const selectorMargin = document.getElementById(`selector-margin${id}`)
+    if (selectorMargin) {
+      selectorMargin.remove()
+    }
   }
+
   onLineReset()
 }
 
