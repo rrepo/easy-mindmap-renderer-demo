@@ -102,22 +102,32 @@ const update_focus = (e) => {
     // 新しいボタンを作成
     const plusChildButton: any = document.createElement("button");
     const deleteButton: any = document.createElement("button");
+    const moveButton: any = document.createElement("button");
+    const plusSiblingButton: any = document.createElement("button");
 
     if (id == "") {
       id = "title"
       plusChildButton.className = "plus-button-right";
       deleteButton.className = "plus-button-right";
-    } else if (node.direction == "right") {
-      plusChildButton.className = "plus-button-right";
-      deleteButton.className = "plus-button-right";
     } else {
-      plusChildButton.className = "plus-button-left";
-      deleteButton.className = "plus-button-left";
+      if (node.direction == "right") {
+        plusChildButton.className = "plus-button-right";
+        deleteButton.className = "plus-button-right";
+      } else {
+        plusChildButton.className = "plus-button-left";
+        deleteButton.className = "plus-button-left";
+      }
+
     }
 
     // ボタンをラップ要素に追加
     wrapper.appendChild(createButton(plusChildButton, plusSvg, "plus-button"));
-    wrapper.appendChild(createButton(deleteButton, trashSvg, "delete-button"));
+    wrapper.appendChild(createButton(plusSiblingButton, plusSvg, "plus-sibling-button"));
+
+    if (id != "title") {
+      wrapper.appendChild(createButton(moveButton, moveSvg, "move-button"));
+      wrapper.appendChild(createButton(deleteButton, trashSvg, "delete-button"));
+    }
 
     // ボタンクリック時の動作を設定
     plusChildButton.addEventListener("click", () => {
@@ -128,15 +138,6 @@ const update_focus = (e) => {
       deleteNode()
     });
 
-    // 下にノード追加
-    const plusSiblingButton: any = document.createElement("button");
-    wrapper.appendChild(createButton(plusSiblingButton, plusSvg, "plus-sibling-button"));
-
-    // 移動ボタン
-    const moveButton: any = document.createElement("button");
-    wrapper.appendChild(createButton(moveButton, moveSvg, "move-button"));
-
-    // 新しいラップ要素を保存
     plusButton.value = wrapper;
     // focus.value = selector
   }
@@ -711,7 +712,7 @@ onMounted(() => {
 
 .delete-button {
   position: relative;
-  top: calc(100% - 20.5px);
+  top: calc(100% - 79.6px);
   font-size: 24px;
   background-color: #c61e29;
   color: white;
@@ -730,7 +731,7 @@ onMounted(() => {
 
 .plus-sibling-button {
   position: relative;
-  top: calc(100% - 51px);
+  top: calc(100% - 20px);
   left: calc(50% - 15px);
   font-size: 24px;
   background-color: #00aaff;
@@ -750,7 +751,7 @@ onMounted(() => {
 
 .move-button {
   position: relative;
-  top: calc(0% - 129px);
+  top: calc(0% - 100px);
   left: calc(50% - 15px);
   font-size: 24px;
   background-color: #00aaff;
