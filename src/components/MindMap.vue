@@ -395,13 +395,8 @@ const createNewNode = (el: any) => {
 }
 
 const deleteNode = () => {
-  console.log(nodes.value)
-
   let id = Number(focus.value.id.replace("selector", ""))
-  console.log(id)
-
   const node = nodes.value.find((node: any) => node.id == id)
-  console.log(node)
 
   const result = getDescendants(nodes.value, id)
   const newNodes = result.mainNodes
@@ -412,7 +407,6 @@ const deleteNode = () => {
   if (node.parent == "title") {
     console.log(node.parent)
     const rap = document.getElementById(`rap-node${node.id}`)
-    console.log(rap)
     rap?.remove()
   } else {
     removeNodes.forEach((node: any) => {
@@ -421,9 +415,7 @@ const deleteNode = () => {
     })
 
     const selectorMargin = document.getElementById(`selector-margin${id}`)
-    if (selectorMargin) {
-      selectorMargin.remove()
-    }
+    selectorMargin?.remove()
   }
 
   onLineReset()
