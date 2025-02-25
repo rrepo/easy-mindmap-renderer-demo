@@ -1,5 +1,5 @@
 <template>
-  <div id="edge" v-dragscroll="true" class="edge">
+  <div id="edge" v-dragscroll="controlDragZoom" class="edge">
     <div id="field" class="field">
       <div class="left">
         <div class="left_vertical">
@@ -60,6 +60,7 @@ const LeaderLine: any = window.LeaderLine;
 const isEditing: any = ref()
 isEditing.value = false
 const plusButton: any = ref(true)
+const controlDragZoom: any = ref(true)
 
 const onLineReset = () => {
   lines.value = LineReset(LeaderLine, lines.value, nodes.value);
@@ -137,6 +138,27 @@ const update_focus = (e) => {
     deleteButton.addEventListener("click", () => {
       deleteNode()
     });
+
+    moveButton.addEventListener("click", (e: MouseEvent) => {
+      // e.preventDefault(); // 不要な選択やスクロールを防ぐ
+      // let id = Number(focus.value.id.replace("selector", ""))
+      // const el = document.getElementById(`rap-node${id}`)
+      // if (!el) return;
+      // controlDragZoom.value = false;
+      // console.log(controlDragZoom.value)
+
+      // el.draggable = true;
+      // console.log(el.draggable);
+
+      // // Dragを開始するためのイベントを手動で発火
+      // const dragEvent = new DragEvent("dragstart", {
+      //   bubbles: true,
+      //   cancelable: true,
+      //   dataTransfer: new DataTransfer()
+      // });
+      // el.dispatchEvent(dragEvent);
+    });
+
 
     plusButton.value = wrapper;
     // focus.value = selector
@@ -422,6 +444,35 @@ const deleteNode = () => {
   onLineReset()
 }
 
+const moveNode = (e: any) => {
+  let id = Number(focus.value.id.replace("selector", ""))
+  const el = document.getElementById(`rap-node${id}`)
+
+  if (!el) return;
+  controlDragZoom.value = false;
+  console.log(controlDragZoom.value)
+
+  let startX = e.clientX;
+  let startY = e.clientY;
+  let startLeft = el.offsetLeft;
+  let startTop = el.offsetTop;
+
+  const onMouseMove = (e: MouseEvent) => {
+    console.log("Drag started"); // デバッグ用
+    el.style.position = "absolute";
+    el.style.left = startLeft + (e.clientX - startX) + "px";
+    el.style.top = startTop + (e.clientY - startY) + "px";
+  };
+
+  const onMouseUp = () => {
+    console.log("Drag ended"); // デバッグ用
+    document.removeEventListener("mousemove", onMouseMove);
+    document.removeEventListener("mouseup", onMouseUp);
+  };
+
+  document.addEventListener("mousemove", onMouseMove);
+  document.addEventListener("mouseup", onMouseUp);
+};
 
 onMounted(() => {
   const el_title: any = document.getElementById('title');
@@ -452,17 +503,19 @@ onMounted(() => {
 
   let scale = 1;
 
-  el_edge.addEventListener('wheel', (event: any) => {
-    event.preventDefault(); // デフォルトのスクロールを無効化
-    const zoomSpeed = 0.1;  // ズーム速度調整
-    if (event.deltaY < 0) {
-      scale *= 1 + zoomSpeed; // ズームイン
-    } else {
-      scale *= 1 - zoomSpeed; // ズームアウト
-    }
-    scale = Math.max(0.5, Math.min(scale, 3)); // 拡大縮小の範囲を制限
-    el_edge.style.transform = `scale(${scale})`;
-  });
+  if (controlDragZoom.value) {
+    el_edge.addEventListener('wheel', (event: any) => {
+      event.preventDefault(); // デフォルトのスクロールを無効化
+      const zoomSpeed = 0.1;  // ズーム速度調整
+      if (event.deltaY < 0) {
+        scale *= 1 + zoomSpeed; // ズームイン
+      } else {
+        scale *= 1 - zoomSpeed; // ズームアウト
+      }
+      scale = Math.max(0.5, Math.min(scale, 3)); // 拡大縮小の範囲を制限
+      el_edge.style.transform = `scale(${scale})`;
+    });
+  }
 });
 
 
