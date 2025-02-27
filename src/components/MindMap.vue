@@ -139,26 +139,44 @@ const update_focus = (e) => {
       deleteNode()
     });
 
-    moveButton.addEventListener("click", (e: MouseEvent) => {
-      // e.preventDefault(); // 不要な選択やスクロールを防ぐ
-      // let id = Number(focus.value.id.replace("selector", ""))
-      // const el = document.getElementById(`rap-node${id}`)
-      // if (!el) return;
-      // controlDragZoom.value = false;
-      // console.log(controlDragZoom.value)
+    moveButton.addEventListener("mousedown", (e: MouseEvent) => {
+      e.preventDefault(); // 不要な選択やスクロールを防ぐ
+      let id = Number(focus.value.id.replace("selector", ""))
+      const el = document.getElementById(`rap-node${id}`)
+      if (!el) return;
+      controlDragZoom.value = false;
 
-      // el.draggable = true;
-      // console.log(el.draggable);
+      let isDragging = false;
+      let startX = e.clientX;
+      let startY = e.clientY;
+      let offsetX = 0;
+      let offsetY = 0;
 
-      // // Dragを開始するためのイベントを手動で発火
-      // const dragEvent = new DragEvent("dragstart", {
-      //   bubbles: true,
-      //   cancelable: true,
-      //   dataTransfer: new DataTransfer()
-      // });
-      // el.dispatchEvent(dragEvent);
+      let initialLeft = el.offsetLeft;
+      let initialTop = el.offsetTop;
+      el.style.position = "absolute";
+
+      // マウス移動時の処理
+      const onMouseMove = (moveEvent: MouseEvent) => {
+        if (!isDragging) return;
+        offsetX = moveEvent.clientX - startX;
+        offsetY = moveEvent.clientY - startY;
+        el.style.left = `${initialLeft + offsetX}px`;
+        el.style.top = `${initialTop + offsetY}px`;
+      };
+
+      // // マウスを離したらドラッグ終了
+      const onMouseUp = () => {
+        isDragging = false;
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+      };
+
+      // イベント登録
+      isDragging = true;
+      document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("mouseup", onMouseUp);
     });
-
 
     plusButton.value = wrapper;
     // focus.value = selector
