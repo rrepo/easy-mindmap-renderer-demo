@@ -170,6 +170,8 @@ const update_focus = (e) => {
         isDragging = false;
         document.removeEventListener("mousemove", onMouseMove);
         document.removeEventListener("mouseup", onMouseUp);
+        controlDragZoom.value = true;
+        // onLineReset()
       };
 
       // イベント登録
@@ -715,7 +717,7 @@ onMounted(() => {
 .rap_node {
   display: flex;
   align-items: center;
-  width: 100%;
+  /* width: 100%; */
 }
 
 .rap_node_left {
