@@ -195,6 +195,8 @@ const checkDropZone = (x: number, y: number, el: any) => {
     zone.classList.remove("highlight");
   });
 
+  y = y - 40
+
   let targetZone = allNodes.find(node => {
     let rect = node.getBoundingClientRect();
     return (
