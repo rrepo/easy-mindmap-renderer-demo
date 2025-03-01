@@ -152,9 +152,13 @@ const update_focus = (e) => {
       let offsetX = 0;
       let offsetY = 0;
 
+      el.style.position = "absolute";
       let initialLeft = el.offsetLeft;
       let initialTop = el.offsetTop;
-      el.style.position = "absolute";
+
+      const elRect = el.getBoundingClientRect();
+      initialTop = initialTop - elRect.height / 2
+      onLineReset()
 
       // マウス移動時の処理
       const onMouseMove = (moveEvent: MouseEvent) => {
@@ -188,14 +192,12 @@ const update_focus = (e) => {
 };
 
 const checkDropZone = (x: number, y: number, el: any) => {
-  let allNodes = Array.from(document.querySelectorAll(".rap_node"))
+  let allNodes = Array.from(document.querySelectorAll(".p_nodes, .c_nodes"))
     .filter(node => node !== el);
 
   allNodes.forEach(zone => {
     zone.classList.remove("highlight");
-  });
-
-  y = y - 40
+  })
 
   let targetZone = allNodes.find(node => {
     let rect = node.getBoundingClientRect();
@@ -208,7 +210,7 @@ const checkDropZone = (x: number, y: number, el: any) => {
   });
 
   if (targetZone) {
-    console.log("Drop detected on .rap_node!");
+    console.log("Drop detected on .selector!", targetZone);
     targetZone.classList.add("highlight");
   }
 }
