@@ -51,3 +51,25 @@ export const focusNode = (focus: any) => {
   focus.focus()
   return focus
 }
+
+export const getDescendants = (nodes: any[], parentId: number): any => {
+  // 削除するノードの ID をリスト化
+  const idsToRemove = new Set([parentId]);
+
+  // 再帰的に子ノードも削除対象に追加
+  function collectChildren(id: any) {
+    nodes.forEach(node => {
+      if (node.parent == id) { // `==` で型の違いにも対応
+        idsToRemove.add(node.id);
+        collectChildren(node.id); // 再帰処理
+      }
+    });
+  }
+
+  collectChildren(parentId);
+
+  // 削除対象を除いた新しい配列を作成
+  const newNode: any = nodes.filter(node => !idsToRemove.has(node.id));
+  return { mainNodes: newNode, descendantNodes: Array.from(idsToRemove) };
+}
+

@@ -43,8 +43,8 @@ import trashSvg from '@/assets/icons/trash-solid.svg';
 import moveSvg from '@/assets/icons/move-svgrepo-com.svg'
 
 import { makelines, removeline, LineReset } from '@/composables/lineUtils';
-import { rightAppend, leftAppend, makeFromParent, makeFromChild, focusNode } from '@/composables/nodeUtils';
-import { inputTitle, inputNode, createButton, getDescendants, checkDropZone } from '@/composables/nodeFuncUtils';
+import { rightAppend, leftAppend, makeFromParent, makeFromChild, getDescendants } from '@/composables/nodeUtils';
+import { inputTitle, inputNode, createButton, checkDropZone } from '@/composables/nodeFuncUtils';
 
 const props = defineProps({
   title_props: String,
@@ -177,8 +177,6 @@ const update_focus = (e) => {
         if (dropEl) {
           dropEl.classList.remove("highlight");
         }
-
-        
 
         isDragging = false;
         document.removeEventListener("mousemove", onMouseMove);
