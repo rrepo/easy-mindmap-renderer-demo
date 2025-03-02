@@ -44,7 +44,7 @@ import moveSvg from '@/assets/icons/move-svgrepo-com.svg'
 
 import { makelines, removeline, LineReset } from '@/composables/lineUtils';
 import { rightAppend, leftAppend, makeFromParent, makeFromChild, focusNode } from '@/composables/nodeUtils';
-import { inputTitle, inputNode, createButton, getDescendants, } from '@/composables/nodeFuncUtils';
+import { inputTitle, inputNode, createButton, getDescendants, checkDropZone } from '@/composables/nodeFuncUtils';
 
 const props = defineProps({
   title_props: String,
@@ -168,18 +168,17 @@ const update_focus = (e) => {
         el.style.left = `${initialLeft + offsetX}px`;
         el.style.top = `${initialTop + offsetY}px`;
 
-        checkDropZone(moveEvent.clientX, moveEvent.clientY, el);
+        checkDropZone(moveEvent.clientX, moveEvent.clientY, el, Array.from(document.querySelectorAll(".p_nodes, .c_nodes")));
       };
 
       // // マウスを離したらドラッグ終了
       const onMouseUp = (moveEvent: MouseEvent) => {
-        console.log("mosueup")
-
-        const dropEl: any = checkDropZone(moveEvent.clientX, moveEvent.clientY, el);
-
+        const dropEl: any = checkDropZone(moveEvent.clientX, moveEvent.clientY, el, Array.from(document.querySelectorAll(".p_nodes, .c_nodes")));
         if (dropEl) {
           dropEl.classList.remove("highlight");
         }
+
+        
 
         isDragging = false;
         document.removeEventListener("mousemove", onMouseMove);
@@ -198,31 +197,6 @@ const update_focus = (e) => {
     plusButton.value = wrapper;
   }
 };
-
-const checkDropZone = (x: number, y: number, el: any) => {
-  let allNodes = Array.from(document.querySelectorAll(".p_nodes, .c_nodes"))
-    .filter(node => node !== el);
-
-  allNodes.forEach(zone => {
-    zone.classList.remove("highlight");
-  })
-
-  let targetZone = allNodes.find(node => {
-    let rect = node.getBoundingClientRect();
-    return (
-      x >= rect.left &&
-      x <= rect.right &&
-      y >= rect.top &&
-      y <= rect.bottom
-    );
-  });
-
-  if (targetZone) {
-    targetZone.classList.add("highlight");
-    return targetZone
-  }
-  return null
-}
 
 const focus_node = () => {
   if (focus.value) {
