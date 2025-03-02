@@ -52,3 +52,27 @@ export const getDescendants = (nodes: any[], parentId: number): any => {
   const newNode: any = nodes.filter(node => !idsToRemove.has(node.id));
   return { mainNodes: newNode, descendantNodes: Array.from(idsToRemove) };
 }
+
+// export const checkDropZone = (x: number, y: number, el: any, allNodes: any) => {
+//   allNodes.filter((node: any) => node !== el);
+
+//   allNodes.forEach((zone: any) => {
+//     zone.classList.remove("highlight");
+//   })
+
+//   const targetZone = allNodes.find((node: any) => {
+//     const rect = node.getBoundingClientRect();
+//     return (
+//       x >= rect.left &&
+//       x <= rect.right &&
+//       y >= rect.top &&
+//       y <= rect.bottom
+//     );
+//   });
+
+//   if (targetZone) {
+//     targetZone.classList.add("highlight");
+//     return targetZone
+//   }
+//   return null
+// }

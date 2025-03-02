@@ -44,7 +44,7 @@ import moveSvg from '@/assets/icons/move-svgrepo-com.svg'
 
 import { makelines, removeline, LineReset } from '@/composables/lineUtils';
 import { rightAppend, leftAppend, makeFromParent, makeFromChild, focusNode } from '@/composables/nodeUtils';
-import { inputTitle, inputNode, createButton, getDescendants } from '@/composables/nodeFuncUtils';
+import { inputTitle, inputNode, createButton, getDescendants, } from '@/composables/nodeFuncUtils';
 
 const props = defineProps({
   title_props: String,
@@ -157,7 +157,7 @@ const update_focus = (e) => {
       let initialTop = el.offsetTop;
 
       const elRect = el.getBoundingClientRect();
-      initialTop = initialTop - elRect.height / 2
+      initialTop = initialTop - elRect.height / 2 + 20
       onLineReset()
 
       // マウス移動時の処理
@@ -172,12 +172,21 @@ const update_focus = (e) => {
       };
 
       // // マウスを離したらドラッグ終了
-      const onMouseUp = () => {
+      const onMouseUp = (moveEvent: MouseEvent) => {
+        console.log("mosueup")
+
+        const dropEl: any = checkDropZone(moveEvent.clientX, moveEvent.clientY, el);
+
+        if (dropEl) {
+          dropEl.classList.remove("highlight");
+        }
+
         isDragging = false;
         document.removeEventListener("mousemove", onMouseMove);
         document.removeEventListener("mouseup", onMouseUp);
         controlDragZoom.value = true;
-        // onLineReset()
+
+        onLineReset()
       };
 
       // イベント登録
@@ -187,7 +196,6 @@ const update_focus = (e) => {
     });
 
     plusButton.value = wrapper;
-    // focus.value = selector
   }
 };
 
@@ -210,9 +218,10 @@ const checkDropZone = (x: number, y: number, el: any) => {
   });
 
   if (targetZone) {
-    console.log("Drop detected on .selector!", targetZone);
     targetZone.classList.add("highlight");
+    return targetZone
   }
+  return null
 }
 
 const focus_node = () => {
