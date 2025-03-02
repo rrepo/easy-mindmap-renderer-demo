@@ -136,7 +136,7 @@ const update_focus = (e) => {
     });
 
     deleteButton.addEventListener("click", () => {
-      deleteNode()
+      onDeleteNode()
     });
 
     moveButton.addEventListener("mousedown", (e: MouseEvent) => {
@@ -448,7 +448,7 @@ const createNewNode = (el: any) => {
   });
 }
 
-const deleteNode = () => {
+const onDeleteNode = () => {
   let id = Number(focus.value.id.replace("selector", ""))
   const node = nodes.value.find((node: any) => node.id == id)
 
