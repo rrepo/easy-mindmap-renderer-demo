@@ -43,7 +43,7 @@ import trashSvg from '@/assets/icons/trash-solid.svg';
 import moveSvg from '@/assets/icons/move-svgrepo-com.svg'
 
 import { makelines, removeline, LineReset } from '@/composables/lineUtils';
-import { rightAppend, leftAppend, makeFromParent, makeFromChild, getDescendants } from '@/composables/nodeUtils';
+import { rightAppend, leftAppend, makeFromParent, makeFromChild, getDescendants, deleteNodes } from '@/composables/nodeUtils';
 import { inputTitle, inputNode, createButton, checkDropZone } from '@/composables/nodeFuncUtils';
 
 const props = defineProps({
@@ -450,28 +450,9 @@ const createNewNode = (el: any) => {
 
 const onDeleteNode = () => {
   let id = Number(focus.value.id.replace("selector", ""))
-  const node = nodes.value.find((node: any) => node.id == id)
-
-  const result = getDescendants(nodes.value, id)
-  const newNodes = result.mainNodes
-  const removeNodes = result.descendantNodes
-
-  nodes.value = newNodes
-
-  if (node.parent == "title") {
-    const rap = document.getElementById(`rap-node${node.id}`)
-    rap?.remove()
-    count.value--
-  } else {
-    removeNodes.forEach((node: any) => {
-      const el: any = document.getElementById(`selector${node}`)
-      el.remove()
-    })
-
-    const selectorMargin = document.getElementById(`selector-margin${id}`)
-    selectorMargin?.remove()
-  }
-
+  const result = deleteNodes(nodes.value, id, count.value)
+  nodes.value = result.nodes
+  count.value = result.count
   onLineReset()
 }
 

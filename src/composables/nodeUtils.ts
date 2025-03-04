@@ -73,3 +73,28 @@ export const getDescendants = (nodes: any[], parentId: number): any => {
   return { mainNodes: newNode, descendantNodes: Array.from(idsToRemove) };
 }
 
+export const deleteNodes = (nodes: any[], id: number, count: number) => {
+  const node = nodes.find((node: any) => node.id == id)
+
+  const result = getDescendants(nodes, id)
+  const newNodes = result.mainNodes
+  const removeNodes = result.descendantNodes
+
+  nodes = newNodes
+
+  if (node.parent == "title") {
+    const rap = document.getElementById(`rap-node${node.id}`)
+    rap?.remove()
+    count--
+  } else {
+    removeNodes.forEach((node: any) => {
+      const el: any = document.getElementById(`selector${node}`)
+      el.remove()
+    })
+
+    const selectorMargin = document.getElementById(`selector-margin${id}`)
+    selectorMargin?.remove()
+  }
+
+  return { nodes, count }
+}
