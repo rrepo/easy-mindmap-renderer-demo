@@ -44,7 +44,7 @@ import moveSvg from '@/assets/icons/move-svgrepo-com.svg'
 
 import { makelines, removeline, LineReset } from '@/composables/lineUtils';
 import { rightAppend, leftAppend, makeFromParent, makeFromChild, getDescendants, deleteNodes } from '@/composables/nodeUtils';
-import { inputTitle, inputNode, createButton, checkDropZone } from '@/composables/nodeFuncUtils';
+import { inputTitle, inputNode, createButton, checkDropZone, mouseMove } from '@/composables/nodeFuncUtils';
 
 const props = defineProps({
   title_props: String,
@@ -140,56 +140,7 @@ const update_focus = (e) => {
     });
 
     moveButton.addEventListener("mousedown", (e: MouseEvent) => {
-      e.preventDefault(); // 不要な選択やスクロールを防ぐ
-      let id = Number(focus.value.id.replace("selector", ""))
-      const el = document.getElementById(`rap-node${id}`)
-      if (!el) return;
-      controlDragZoom.value = false;
-
-      let isDragging = false;
-      let startX = e.clientX;
-      let startY = e.clientY;
-      let offsetX = 0;
-      let offsetY = 0;
-
-      el.style.position = "absolute";
-      let initialLeft = el.offsetLeft;
-      let initialTop = el.offsetTop;
-
-      const elRect = el.getBoundingClientRect();
-      initialTop = initialTop - elRect.height / 2 + 20
-      onLineReset()
-
-      // マウス移動時の処理
-      const onMouseMove = (moveEvent: MouseEvent) => {
-        if (!isDragging) return;
-        offsetX = moveEvent.clientX - startX;
-        offsetY = moveEvent.clientY - startY;
-        el.style.left = `${initialLeft + offsetX}px`;
-        el.style.top = `${initialTop + offsetY}px`;
-
-        checkDropZone(moveEvent.clientX, moveEvent.clientY, el, Array.from(document.querySelectorAll(".p_nodes, .c_nodes")));
-      };
-
-      // // マウスを離したらドラッグ終了
-      const onMouseUp = (moveEvent: MouseEvent) => {
-        const dropEl: any = checkDropZone(moveEvent.clientX, moveEvent.clientY, el, Array.from(document.querySelectorAll(".p_nodes, .c_nodes")));
-        if (dropEl) {
-          dropEl.classList.remove("highlight");
-        }
-
-        isDragging = false;
-        document.removeEventListener("mousemove", onMouseMove);
-        document.removeEventListener("mouseup", onMouseUp);
-        controlDragZoom.value = true;
-
-        onLineReset()
-      };
-
-      // イベント登録
-      isDragging = true;
-      document.addEventListener("mousemove", onMouseMove);
-      document.addEventListener("mouseup", onMouseUp);
+      onMoveNode(e)
     });
 
     plusButton.value = wrapper;
@@ -456,31 +407,56 @@ const onDeleteNode = () => {
   onLineReset()
 }
 
-const moveNode = (e: any) => {
+const onMoveNode = (e: any) => {
+  e.preventDefault(); // 不要な選択やスクロールを防ぐ
   let id = Number(focus.value.id.replace("selector", ""))
   const el = document.getElementById(`rap-node${id}`)
-
   if (!el) return;
   controlDragZoom.value = false;
-  console.log(controlDragZoom.value)
+  let isDragging = false;
 
-  let startX = e.clientX;
-  let startY = e.clientY;
-  let startLeft = el.offsetLeft;
-  let startTop = el.offsetTop;
+  el.style.position = "absolute";
+  let initialLeft = el.offsetLeft;
+  let initialTop = el.offsetTop;
+  const elRect = el.getBoundingClientRect();
+  initialTop = initialTop - elRect.height / 2 + 20
+  onLineReset()
 
-  const onMouseMove = (e: MouseEvent) => {
-    console.log("Drag started"); // デバッグ用
-    el.style.position = "absolute";
-    el.style.left = startLeft + (e.clientX - startX) + "px";
-    el.style.top = startTop + (e.clientY - startY) + "px";
+  const startX = e.clientX;
+  const startY = e.clientY;
+  let offsetX = 0;
+  let offsetY = 0;
+
+
+  const onMouseMove = (moveEvent: MouseEvent) => {
+    const offset = mouseMove(isDragging, moveEvent, el!, initialLeft, initialTop, startX, startY);
+    if (offset) {
+      offsetX = offset.offsetX;
+      offsetY = offset.offsetY;
+    }
   };
 
-  const onMouseUp = () => {
-    console.log("Drag ended"); // デバッグ用
-    document.removeEventListener("mousemove", onMouseMove);
+  const onMouseUp = (moveEvent: MouseEvent) => {
+    const dropEl: any = checkDropZone(moveEvent.clientX, moveEvent.clientY, el, Array.from(document.querySelectorAll(".p_nodes, .c_nodes")));
+    if (dropEl) {
+      dropEl.classList.remove("highlight");
+    }
+
+    isDragging = false;
+    document.removeEventListener("mousemove", (moveEvent) => {
+      const offset: any = mouseMove(isDragging, moveEvent, el!, initialLeft, initialTop, startX, startY);
+      offsetX = offset.offsetX
+      offsetY = offset.offsetY
+    });
     document.removeEventListener("mouseup", onMouseUp);
+    controlDragZoom.value = true;
+
+    onLineReset()
   };
+
+  // イベント登録
+  isDragging = true;
+  console.log(isDragging)
 
   document.addEventListener("mousemove", onMouseMove);
   document.addEventListener("mouseup", onMouseUp);

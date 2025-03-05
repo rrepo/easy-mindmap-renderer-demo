@@ -54,3 +54,30 @@ export const checkDropZone = (x: number, y: number, el: any, allNodes: any) => {
   }
   return null
 }
+
+export const mouseMove = (
+  isDragging: boolean,
+  moveEvent: MouseEvent,
+  el: HTMLElement,
+  initialLeft: number,
+  initialTop: number,
+  startX: number,
+  startY: number
+) => {
+  if (!isDragging) return;
+
+  const offsetX = moveEvent.clientX - startX;
+  const offsetY = moveEvent.clientY - startY;
+
+  el.style.left = `${initialLeft + offsetX}px`;
+  el.style.top = `${initialTop + offsetY }px`;
+
+  checkDropZone(
+    moveEvent.clientX,
+    moveEvent.clientY,
+    el,
+    Array.from(document.querySelectorAll(".p_nodes, .c_nodes"))
+  );
+
+  return { offsetX, offsetY };
+};
