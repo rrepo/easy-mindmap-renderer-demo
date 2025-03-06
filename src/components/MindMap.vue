@@ -415,11 +415,9 @@ const onMoveNode = (e: any) => {
   controlDragZoom.value = false;
   let isDragging = false;
 
+  const initialLeft = el.offsetLeft;
+  const initialTop = el.offsetTop;
   el.style.position = "absolute";
-  let initialLeft = el.offsetLeft;
-  let initialTop = el.offsetTop;
-  const elRect = el.getBoundingClientRect();
-  initialTop = initialTop - elRect.height / 2 + 20
   onLineReset()
 
   const startX = e.clientX;
@@ -456,7 +454,6 @@ const onMoveNode = (e: any) => {
 
   // イベント登録
   isDragging = true;
-  console.log(isDragging)
 
   document.addEventListener("mousemove", onMouseMove);
   document.addEventListener("mouseup", onMouseUp);

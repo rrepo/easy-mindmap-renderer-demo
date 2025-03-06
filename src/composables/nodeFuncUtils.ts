@@ -70,7 +70,7 @@ export const mouseMove = (
   const offsetY = moveEvent.clientY - startY;
 
   el.style.left = `${initialLeft + offsetX}px`;
-  el.style.top = `${initialTop + offsetY }px`;
+  el.style.top = `${initialTop + offsetY}px`;
 
   checkDropZone(
     moveEvent.clientX,
