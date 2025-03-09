@@ -415,12 +415,14 @@ const onMoveNode = (e: any) => {
   controlDragZoom.value = false;
   let isDragging = false;
 
-  const elRect = el.getBoundingClientRect();
   const initialLeft = el.offsetLeft;
-  let initialTop = el.offsetTop - el.offsetHeight / 2;
+  let initialTop = el.offsetTop;
+  if (el.offsetTop == 0) {
+    initialTop = initialTop - el.offsetHeight / 2;
+  }
+
+  console.log(initialTop)
   el.style.position = "absolute";
-  // const initialLeft = elRect.left;
-  // let initialTop = elRect.top;
   onLineReset()
 
   const startX = e.clientX;
