@@ -415,16 +415,18 @@ const onMoveNode = (e: any) => {
   controlDragZoom.value = false;
   let isDragging = false;
 
+  const elRect = el.getBoundingClientRect();
   const initialLeft = el.offsetLeft;
-  const initialTop = el.offsetTop;
+  let initialTop = el.offsetTop - el.offsetHeight / 2;
   el.style.position = "absolute";
+  // const initialLeft = elRect.left;
+  // let initialTop = elRect.top;
   onLineReset()
 
   const startX = e.clientX;
   const startY = e.clientY;
   let offsetX = 0;
   let offsetY = 0;
-
 
   const onMouseMove = (moveEvent: MouseEvent) => {
     const offset = mouseMove(isDragging, moveEvent, el!, initialLeft, initialTop, startX, startY);
@@ -438,6 +440,12 @@ const onMoveNode = (e: any) => {
     const dropEl: any = checkDropZone(moveEvent.clientX, moveEvent.clientY, el, Array.from(document.querySelectorAll(".p_nodes, .c_nodes")));
     if (dropEl) {
       dropEl.classList.remove("highlight");
+      let id = Number(focus.value.id.replace("selector", ""))
+      const result = deleteNodes(nodes.value, id, count.value)
+      nodes.value = result.nodes
+      count.value = result.count
+    } else {
+      el.style.position = "static";
     }
 
     isDragging = false;
