@@ -26,6 +26,7 @@ export const makeline = (LeaderLine: any, el: any, parent: any): any => {
 };
 
 export const makelines = (LeaderLine: any, nodes: any): any => {
+  console.log(nodes)
   const returnEl: any = []
 
   nodes.forEach((el: any) => {
@@ -47,6 +48,7 @@ export const removeline = (lines: any): any => {
 }
 
 export const LineReset = (LeaderLine: any, lines: any, nodes: any): any => {
+  console.log(lines)
   lines = removeline(lines);
   lines = makelines(LeaderLine, nodes);
   return lines;

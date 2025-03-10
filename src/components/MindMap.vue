@@ -61,8 +61,10 @@ const isEditing: any = ref()
 isEditing.value = false
 const plusButton: any = ref(true)
 const controlDragZoom: any = ref(true)
+const scale = ref(1);
 
 const onLineReset = () => {
+  console.log("line rest")
   lines.value = LineReset(LeaderLine, lines.value, nodes.value);
 };
 
@@ -431,7 +433,7 @@ const onMoveNode = (e: any) => {
   let offsetY = 0;
 
   const onMouseMove = (moveEvent: MouseEvent) => {
-    const offset = mouseMove(isDragging, moveEvent, el!, initialLeft, initialTop, startX, startY);
+    const offset = mouseMove(isDragging, moveEvent, el!, initialLeft, initialTop, startX, startY, scale.value);
     if (offset) {
       offsetX = offset.offsetX;
       offsetY = offset.offsetY;
@@ -496,19 +498,18 @@ onMounted(() => {
     el_edge.addEventListener('scroll', focus_node);
   });
 
-  let scale = 1;
 
   if (controlDragZoom.value) {
     el_edge.addEventListener('wheel', (event: any) => {
       event.preventDefault(); // デフォルトのスクロールを無効化
       const zoomSpeed = 0.1;  // ズーム速度調整
       if (event.deltaY < 0) {
-        scale *= 1 + zoomSpeed; // ズームイン
+        scale.value *= 1 + zoomSpeed; // ズームイン
       } else {
-        scale *= 1 - zoomSpeed; // ズームアウト
+        scale.value *= 1 - zoomSpeed; // ズームアウト
       }
-      scale = Math.max(0.5, Math.min(scale, 3)); // 拡大縮小の範囲を制限
-      el_edge.style.transform = `scale(${scale})`;
+      scale.value = Math.max(0.4, Math.min(scale.value, 3)); // 拡大縮小の範囲を制限
+      el_edge.style.transform = `scale(${scale.value})`;
     });
   }
 });

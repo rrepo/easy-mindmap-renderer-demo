@@ -62,12 +62,13 @@ export const mouseMove = (
   initialLeft: number,
   initialTop: number,
   startX: number,
-  startY: number
+  startY: number,
+  scale: number
 ) => {
   if (!isDragging) return;
 
-  const offsetX = moveEvent.clientX - startX;
-  const offsetY = moveEvent.clientY - startY;
+  const offsetX = (moveEvent.clientX - startX) / scale;
+  const offsetY = (moveEvent.clientY - startY) / scale;
 
   el.style.left = `${initialLeft + offsetX}px`;
   el.style.top = `${initialTop + offsetY}px`;
