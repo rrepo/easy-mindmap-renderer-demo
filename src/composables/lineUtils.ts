@@ -1,7 +1,7 @@
-export const makeline = (LeaderLine: any, el: any, parent: any): any => {
+export const makeline = (LeaderLine: any, el: any, parent: any, slace: number): any => {
   const line = new LeaderLine(
     document.getElementById(parent),
-    LeaderLine.pointAnchor(document.getElementById(`node${el.id}`), { x: '50%', y: '50%' })
+    document.getElementById(`node${el.id}`), { x: '50%', y: '50%' }
   );
   line.path = 'magnet';
   line.endPlug = 'behind';
@@ -9,6 +9,7 @@ export const makeline = (LeaderLine: any, el: any, parent: any): any => {
   const elmWrapper = document.getElementById('line-wrapper') as HTMLElement;
   const el_line = document.querySelectorAll('.leader-line');
 
+  console.log("scale", slace);
   const position = () => {
     if (!elmWrapper) return;
     elmWrapper.style.transform = 'none';
@@ -25,15 +26,14 @@ export const makeline = (LeaderLine: any, el: any, parent: any): any => {
   return el_line.length > 0 ? (el_line[el_line.length - 1] as HTMLElement) : null;
 };
 
-export const makelines = (LeaderLine: any, nodes: any): any => {
-  console.log(nodes)
+export const makelines = (LeaderLine: any, nodes: any, scale: number): any => {
   const returnEl: any = []
 
   nodes.forEach((el: any) => {
     if (el.parent === 'title') {
-      returnEl.push(makeline(LeaderLine, el, 'title'));
+      returnEl.push(makeline(LeaderLine, el, 'title', scale));
     } else {
-      returnEl.push(makeline(LeaderLine, el, `node${el.parent}`));
+      returnEl.push(makeline(LeaderLine, el, `node${el.parent}`, scale));
     }
   });
   return returnEl
@@ -47,9 +47,8 @@ export const removeline = (lines: any): any => {
   return lines;
 }
 
-export const LineReset = (LeaderLine: any, lines: any, nodes: any): any => {
-  console.log(lines)
+export const LineReset = (LeaderLine: any, lines: any, nodes: any, scale: number): any => {
   lines = removeline(lines);
-  lines = makelines(LeaderLine, nodes);
+  lines = makelines(LeaderLine, nodes, scale);
   return lines;
 }

@@ -64,8 +64,7 @@ const controlDragZoom: any = ref(true)
 const scale = ref(1);
 
 const onLineReset = () => {
-  console.log("line rest")
-  lines.value = LineReset(LeaderLine, lines.value, nodes.value);
+  lines.value = LineReset(LeaderLine, lines.value, nodes.value, scale.value);
 };
 
 const update_focus = (e) => {
@@ -480,7 +479,7 @@ onMounted(() => {
 
   nodes.value.forEach(createNewNode)
 
-  lines.value = makelines(LeaderLine, nodes.value);
+  lines.value = makelines(LeaderLine, nodes.value, scale.value);
 
   el_title_selector.addEventListener('keydown', (e: any) => {
     if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
@@ -510,6 +509,7 @@ onMounted(() => {
       }
       scale.value = Math.max(0.4, Math.min(scale.value, 3)); // 拡大縮小の範囲を制限
       el_edge.style.transform = `scale(${scale.value})`;
+      onLineReset()
     });
   }
 });
