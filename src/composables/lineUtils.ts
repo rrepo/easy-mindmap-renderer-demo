@@ -1,4 +1,4 @@
-export const makeline = (LeaderLine: any, el: any, parent: any, slace: number): any => {
+export const makeline = (LeaderLine: any, el: any, parent: any, scale: number): any => {
   const line = new LeaderLine(
     document.getElementById(parent),
     document.getElementById(`node${el.id}`), { x: '50%', y: '50%' }
@@ -9,12 +9,13 @@ export const makeline = (LeaderLine: any, el: any, parent: any, slace: number): 
   const elmWrapper = document.getElementById('line-wrapper') as HTMLElement;
   const el_line = document.querySelectorAll('.leader-line');
 
-  console.log("scale", slace);
   const position = () => {
     if (!elmWrapper) return;
     elmWrapper.style.transform = 'none';
     const rectWrapper = elmWrapper.getBoundingClientRect();
-    elmWrapper.style.transform = `translate(${(rectWrapper.left + pageXOffset) * -1}px, ${(rectWrapper.top + pageYOffset) * -1}px)`;
+    const baseX = (rectWrapper.left + pageXOffset) * -1;
+    const baseY = (rectWrapper.top + pageYOffset) * -1;
+    elmWrapper.style.transform = `translate(${baseX}px, ${baseY}px)`;
     line.position();
   };
 

@@ -3,6 +3,12 @@
     <div id="field" class="field">
       <div class="left">
         <div class="left_vertical">
+
+          <div class="op-area">
+            <button class="op-btn">+</button>
+            <button class="op-btn">-</button>
+          </div>
+
           <div id="left_center" class="left_horizontal">
             <div />
           </div>
@@ -518,31 +524,26 @@ onMounted(() => {
 </script>
 
 <style>
-#line-wrapper {
-  z-index: -100;
-}
-
-.btn {
-  z-index: 10000;
-  /* display: flex; */
-}
-
 .edge {
   /* width: 100%;
   height: 100vh; */
-  width: 300vw;
-  height: 300vh;
+  width: 500vw;
+  height: 500vh;
   overflow: auto;
   background-color: #F5F5F5;
   /* border: 1px solid #000; */
-}
 
-.field {
-  width: 5000px;
-  height: 5000px;
-  z-index: 1;
-  display: flex;
-  position: relative;
+  .field {
+    width: 5000px;
+    height: 5000px;
+    z-index: 1;
+    display: flex;
+    position: relative;
+
+    #line-wrapper {
+      z-index: -100;
+    }
+  }
 }
 
 .center {
@@ -557,19 +558,19 @@ onMounted(() => {
   height: 100%;
   display: flex;
   align-items: center;
-}
 
-.right_vertical {
-  width: 100%;
-  /* background-color: olive; */
-  margin: 0 auto;
-  display: flex;
-  justify-content: flex-start;
-}
+  .right_vertical {
+    width: 100%;
+    /* background-color: olive; */
+    margin: 0 auto;
+    display: flex;
+    justify-content: flex-start;
 
-.right_horizontal {
-  width: fit-content;
-  /* background-color: orchid; */
+    .right_horizontal {
+      width: fit-content;
+      /* background-color: orchid; */
+    }
+  }
 }
 
 .left {
@@ -577,20 +578,34 @@ onMounted(() => {
   height: 100%;
   display: flex;
   align-items: center;
-}
 
-.left_vertical {
-  width: 100%;
-  margin: 0 auto;
-  text-align: left;
-  display: flex;
-  justify-content: flex-end;
-  /* background-color: olive; */
-}
+  .left_vertical {
+    width: 100%;
+    margin: 0 auto;
+    text-align: left;
+    display: flex;
+    justify-content: flex-end;
+    /* background-color: olive; */
 
-.left_horizontal {
-  width: fit-content;
-  /* background-color: orchid; */
+    .op-area {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      border: none;
+      padding: 10px 15px;
+      cursor: pointer;
+      border-radius: 5px;
+
+      .op-btn {
+        margin: 0 5px;
+      }
+    }
+
+    .left_horizontal {
+      width: fit-content;
+      /* background-color: orchid; */
+    }
+  }
 }
 
 .title_node_rap {
