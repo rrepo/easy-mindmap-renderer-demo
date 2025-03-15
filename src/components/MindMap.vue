@@ -1,14 +1,14 @@
 <template>
   <div id="edge" v-dragscroll="controlDragZoom" class="edge">
+
+    <div class="op-area">
+      <button class="op-btn">+</button>
+      <button class="op-btn">-</button>
+    </div>
+
     <div id="field" class="field">
       <div class="left">
         <div class="left_vertical">
-
-          <div class="op-area">
-            <button class="op-btn">+</button>
-            <button class="op-btn">-</button>
-          </div>
-
           <div id="left_center" class="left_horizontal">
             <div />
           </div>
@@ -505,19 +505,50 @@ onMounted(() => {
 
 
   if (controlDragZoom.value) {
-    el_edge.addEventListener('wheel', (event: any) => {
-      event.preventDefault(); // デフォルトのスクロールを無効化
-      const zoomSpeed = 0.1;  // ズーム速度調整
+    const el_field: any = document.getElementById('field');
+    el_field.addEventListener('wheel', (event: any) => {
+      event.preventDefault();
+
+      const zoomSpeed = 0.1;
+      let newScale = scale.value;
+
       if (event.deltaY < 0) {
-        scale.value *= 1 + zoomSpeed; // ズームイン
+        newScale *= 1 + zoomSpeed; // ズームイン
       } else {
-        scale.value *= 1 - zoomSpeed; // ズームアウト
+        newScale *= 1 - zoomSpeed; // ズームアウト
       }
-      scale.value = Math.max(0.4, Math.min(scale.value, 3)); // 拡大縮小の範囲を制限
-      el_edge.style.transform = `scale(${scale.value})`;
-      onLineReset()
+
+      newScale = Math.max(0.4, Math.min(newScale, 3)); // ズーム範囲制限
+
+      // **カーソル位置を基準にズーム**
+      const rect = el_field.getBoundingClientRect();
+      const offsetX = event.clientX - rect.left;
+      const offsetY = event.clientY - rect.top;
+
+      // **ズーム前のスクロール位置**
+      const scrollX = window.scrollX;
+      const scrollY = window.scrollY;
+
+      // **ズーム倍率に応じた補正値**
+      const scaleRatio = newScale / scale.value;
+      const translateX = offsetX * (scaleRatio - 1);
+      const translateY = offsetY * (scaleRatio - 1);
+
+      // **拡大縮小の適用**
+      el_field.style.transformOrigin = "2500 2500"; // 左上基準に拡大縮小
+      el_field.style.transform = `scale(${newScale})`;
+
+      // **スクロール位置を補正してズーム中心を維持**
+      window.scrollTo(
+        scrollX + translateX,
+        scrollY + translateY
+      );
+
+      scale.value = newScale;
     });
   }
+
+
 });
 
 
@@ -525,13 +556,25 @@ onMounted(() => {
 
 <style>
 .edge {
-  /* width: 100%;
-  height: 100vh; */
-  width: 500vw;
-  height: 500vh;
+  width: 100vw;
+  height: 100vh;
   overflow: auto;
   background-color: #F5F5F5;
   /* border: 1px solid #000; */
+
+  .op-area {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+
+    .op-btn {
+      margin: 0 5px;
+    }
+  }
 
   .field {
     width: 5000px;
@@ -586,20 +629,6 @@ onMounted(() => {
     display: flex;
     justify-content: flex-end;
     /* background-color: olive; */
-
-    .op-area {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      border: none;
-      padding: 10px 15px;
-      cursor: pointer;
-      border-radius: 5px;
-
-      .op-btn {
-        margin: 0 5px;
-      }
-    }
 
     .left_horizontal {
       width: fit-content;
