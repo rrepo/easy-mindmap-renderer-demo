@@ -70,6 +70,7 @@ const controlDragZoom: any = ref(true)
 const scale = ref(1);
 
 const onLineReset = () => {
+  console.log(scale.value, "onLineReset")
   lines.value = LineReset(LeaderLine, lines.value, nodes.value, scale.value);
 };
 
@@ -331,7 +332,7 @@ const createChildNode = () => {
 
   isEditing.value = true
 
-  lines.value = LineReset(LeaderLine, lines.value, nodes.value)
+  onLineReset()
 };
 
 const createNewNode = (el: any) => {
@@ -379,7 +380,7 @@ const createNewNode = (el: any) => {
   const el_selector: any = document.getElementById(`selector${el.id}`);
 
   el_node.addEventListener('blur', () => {
-    lines.value = LineReset(LeaderLine, lines.value, nodes.value)
+    onLineReset()
   });
 
   el_selector.addEventListener('click', (e: any) => {
@@ -546,6 +547,7 @@ onMounted(() => {
 
       scale.value = newScale;
     });
+    onLineReset()
   }
 
 

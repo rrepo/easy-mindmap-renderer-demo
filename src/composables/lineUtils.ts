@@ -9,8 +9,6 @@ export const makeline = (LeaderLine: any, el: any, parent: any, scale: number): 
   const elmWrapper = document.getElementById('line-wrapper') as HTMLElement;
   const el_line = document.querySelectorAll('.leader-line');
 
-  console.log("makeline",scale)
-
   const position = () => {
     if (!elmWrapper) return;
     elmWrapper.style.transform = 'none';
@@ -51,6 +49,7 @@ export const removeline = (lines: any): any => {
 }
 
 export const LineReset = (LeaderLine: any, lines: any, nodes: any, scale: number): any => {
+  console.log("LineReset",scale)
   lines = removeline(lines);
   lines = makelines(LeaderLine, nodes, scale);
   return lines;
