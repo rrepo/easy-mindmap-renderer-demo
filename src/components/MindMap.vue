@@ -70,7 +70,6 @@ const controlDragZoom: any = ref(true)
 const scale = ref(1);
 
 const onLineReset = () => {
-  console.log(scale.value, "onLineReset")
   lines.value = LineReset(LeaderLine, lines.value, nodes.value, scale.value);
 };
 
@@ -482,8 +481,6 @@ onMounted(() => {
   const el_edge: any = document.getElementById('edge');
   const el_title_selector: any = document.getElementById('selector');
 
-  el_title.scrollIntoView({ block: 'center', inline: 'center' });
-
   nodes.value.forEach(createNewNode)
 
   lines.value = makelines(LeaderLine, nodes.value, scale.value);
@@ -507,6 +504,7 @@ onMounted(() => {
 
   if (controlDragZoom.value) {
     const el_field: any = document.getElementById('field');
+    // leade-wrapperの要素も変えてみる
     el_field.addEventListener('wheel', (event: any) => {
       event.preventDefault();
 
@@ -550,7 +548,7 @@ onMounted(() => {
     onLineReset()
   }
 
-
+  el_title.scrollIntoView({ block: 'center', inline: 'center' });
 });
 
 

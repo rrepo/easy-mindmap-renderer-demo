@@ -6,7 +6,7 @@ export const makeline = (LeaderLine: any, el: any, parent: any, scale: number): 
   line.path = 'magnet';
   line.endPlug = 'behind';
 
-  const elmWrapper = document.getElementById('line-wrapper') as HTMLElement;
+  const elmWrapper = document.getElementById('field') as HTMLElement;
   const el_line = document.querySelectorAll('.leader-line');
 
   const position = () => {
@@ -15,7 +15,8 @@ export const makeline = (LeaderLine: any, el: any, parent: any, scale: number): 
     const rectWrapper = elmWrapper.getBoundingClientRect();
     const baseX = (rectWrapper.left + pageXOffset) * -1;
     const baseY = (rectWrapper.top + pageYOffset) * -1;
-    elmWrapper.style.transform = `translate(${baseX}px, ${baseY}px)`;
+    
+    elmWrapper.style.transform = `translate(${baseX}px, ${baseY}px) `;
     line.position();
   };
 
@@ -49,7 +50,6 @@ export const removeline = (lines: any): any => {
 }
 
 export const LineReset = (LeaderLine: any, lines: any, nodes: any, scale: number): any => {
-  console.log("LineReset",scale)
   lines = removeline(lines);
   lines = makelines(LeaderLine, nodes, scale);
   return lines;
