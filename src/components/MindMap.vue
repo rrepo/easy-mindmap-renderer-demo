@@ -1,46 +1,45 @@
 <template>
   <div id="edge" v-dragscroll="controlDragZoom" class="edge">
 
-    <div class="op-area">
-      <button class="op-btn">+</button>
-      <button class="op-btn">-</button>
-    </div>
+    <div class="wrapper">
+      <svg id="svg-lines" xmlns="http://www.w3.org/2000/svg" :style="{ transform: `scale(${scale})` }">
+      </svg>
 
-    <div id="field" class="field">
-      <div class="left">
-        <div class="left_vertical">
-          <div id="left_center" class="left_horizontal">
-            <div />
-          </div>
-        </div>
-      </div>
-
-      <div class="center">
-        <div class="title_node_rap">
-          <div id="selector" class="selector" tabindex="0" @click="update_focus" @dblclick="inputTitle"
-            @keydown="move_focus">
-            <div id="title" class="title_nodes" contenteditable="true" @blur="onLineReset">
-              {{ title }}
+      <div id="field" class="field" :style="{ transform: `scale(${scale})` }">
+        <div class="left">
+          <div class="left_vertical">
+            <div id="left_center" class="left_horizontal">
+              <div />
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="right">
-        <div class="right_vertical">
-          <div id="right_center" class="right_horizontal">
-            <div />
+        <div class="center">
+          <div class="title_node_rap">
+            <div id="selector" class="selector" tabindex="0" @click="update_focus" @dblclick="inputTitle"
+              @keydown="move_focus">
+              <div id="title" class="title_nodes" contenteditable="true" @blur="onLineReset">
+                {{ title }}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div id="line-wrapper" />
+        <div class="right">
+          <div class="right_vertical">
+            <div id="right_center" class="right_horizontal">
+              <div />
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watchEffect } from 'vue';
 // import { dragscroll } from 'vue-dragscroll';
 import plusSvg from '@/assets/icons/plus-solid.svg';
 import trashSvg from '@/assets/icons/trash-solid.svg';
@@ -67,7 +66,24 @@ const isEditing: any = ref()
 isEditing.value = false
 const plusButton: any = ref(true)
 const controlDragZoom: any = ref(true)
+
 const scale = ref(1);
+const minScale = 0.5;
+const maxScale = 2;
+const scaleStep = 0.3;
+
+const zoomIn = () => {
+  if (scale.value < maxScale) {
+    scale.value += scaleStep;
+  }
+};
+
+const zoomOut = () => {
+  console.log("out")
+  if (scale.value > minScale) {
+    scale.value -= scaleStep;
+  }
+};
 
 const onLineReset = () => {
   lines.value = LineReset(LeaderLine, lines.value, nodes.value, scale.value);
@@ -500,58 +516,28 @@ onMounted(() => {
   el_title.addEventListener('blur', () => {
     el_edge.addEventListener('scroll', focus_node);
   });
-
-
-  if (controlDragZoom.value) {
-    const el_field: any = document.getElementById('field');
-    // leade-wrapperの要素も変えてみる
-    el_field.addEventListener('wheel', (event: any) => {
-      event.preventDefault();
-
-      const zoomSpeed = 0.1;
-      let newScale = scale.value;
-
-      if (event.deltaY < 0) {
-        newScale *= 1 + zoomSpeed; // ズームイン
-      } else {
-        newScale *= 1 - zoomSpeed; // ズームアウト
-      }
-
-      newScale = Math.max(0.4, Math.min(newScale, 3)); // ズーム範囲制限
-
-      // **カーソル位置を基準にズーム**
-      const rect = el_field.getBoundingClientRect();
-      const offsetX = event.clientX - rect.left;
-      const offsetY = event.clientY - rect.top;
-
-      // **ズーム前のスクロール位置**
-      const scrollX = window.scrollX;
-      const scrollY = window.scrollY;
-
-      // **ズーム倍率に応じた補正値**
-      const scaleRatio = newScale / scale.value;
-      const translateX = offsetX * (scaleRatio - 1);
-      const translateY = offsetY * (scaleRatio - 1);
-
-      // **拡大縮小の適用**
-      el_field.style.transformOrigin = "2500 2500"; // 左上基準に拡大縮小
-      el_field.style.transform = `scale(${newScale})`;
-
-      // **スクロール位置を補正してズーム中心を維持**
-      window.scrollTo(
-        scrollX + translateX,
-        scrollY + translateY
-      );
-
-      scale.value = newScale;
-    });
-    onLineReset()
-  }
-
   el_title.scrollIntoView({ block: 'center', inline: 'center' });
+
+  const el_field: any = document.getElementById('field');
+  el_field.addEventListener('wheel', (event: any) => {
+    event.preventDefault();
+
+    const zoomSpeed = 0.1;
+    let newScale = scale.value;
+
+    if (event.deltaY < 0) {
+      newScale *= 1 + zoomSpeed; // ズームイン
+    } else {
+      newScale *= 1 - zoomSpeed; // ズームアウト
+    }
+
+    newScale = Math.max(0.4, Math.min(newScale, 3)); // ズーム範囲制限
+
+    scale.value = newScale;
+
+    console.log("new point")
+  });
 });
-
-
 </script>
 
 <style>
@@ -562,30 +548,32 @@ onMounted(() => {
   background-color: #F5F5F5;
   /* border: 1px solid #000; */
 
-  .op-area {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    border-radius: 5px;
-
-    .op-btn {
-      margin: 0 5px;
-    }
+  .wrapper {
+    position: relative;
+    width: 2000px;
+    height: 2000px;
+    margin: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .field {
-    width: 5000px;
-    height: 5000px;
+    position: relative;
+    width: 2000px;
+    height: 2000px;
     z-index: 1;
     display: flex;
-    position: relative;
+  }
 
-    #line-wrapper {
-      z-index: -100;
-    }
+  #svg-lines {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 0;
   }
 }
 

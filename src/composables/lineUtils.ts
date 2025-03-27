@@ -1,31 +1,54 @@
-export const makeline = (LeaderLine: any, el: any, parent: any, scale: number): any => {
-  const line = new LeaderLine(
-    document.getElementById(parent),
-    document.getElementById(`node${el.id}`), { x: '50%', y: '50%' }
-  );
-  line.path = 'magnet';
-  line.endPlug = 'behind';
+export const makeline = (LeaderLine: any, el: any, pId: any, scale: number): any => {
 
-  const elmWrapper = document.getElementById('field') as HTMLElement;
-  const el_line = document.querySelectorAll('.leader-line');
+  const cId = el.id
+  const svg: any = document.getElementById('svg-lines');
+  const parent = document.getElementById(pId);
+  const child = document.getElementById(cId);
 
-  const position = () => {
-    if (!elmWrapper) return;
-    elmWrapper.style.transform = 'none';
-    const rectWrapper = elmWrapper.getBoundingClientRect();
-    const baseX = (rectWrapper.left + pageXOffset) * -1;
-    const baseY = (rectWrapper.top + pageYOffset) * -1;
-    
-    elmWrapper.style.transform = `translate(${baseX}px, ${baseY}px) `;
-    line.position();
-  };
+  if (!svg || !parent || !child) return null;
 
-  if (elmWrapper && el_line.length > 0) {
-    elmWrapper.appendChild(el_line[el_line.length - 1]);
+  const fieldRect = document.getElementById('field')?.getBoundingClientRect();
+  if (!fieldRect) return null;
+
+  // 親・子要素の位置取得
+  const parentRect = parent.getBoundingClientRect();
+  const childRect = child.getBoundingClientRect();
+
+  // `scale` を考慮した座標計算
+  const x1 = (parentRect.left + parentRect.width / 2 - fieldRect.left) / scale;
+  const y1 = (parentRect.top + parentRect.height / 2 - fieldRect.top) / scale;
+
+  const x2 = (childRect.left + childRect.width / 2 - fieldRect.left) / scale;
+  const y2 = (childRect.top + childRect.height / 2 - fieldRect.top) / scale;
+
+  // 線を描画する関数
+  function drawLine(x1: number, y1: number, x2: number, y2: number, id: string, color: string): SVGLineElement {
+    let line = svg.querySelector(`[data-line-id="${id}"]`) as SVGLineElement;
+
+    if (line) {
+      // 既存の線を更新
+      line.setAttribute('x1', x1.toString());
+      line.setAttribute('y1', y1.toString());
+      line.setAttribute('x2', x2.toString());
+      line.setAttribute('y2', y2.toString());
+    } else {
+      // 新しい線を作成
+      line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', x1.toString());
+      line.setAttribute('y1', y1.toString());
+      line.setAttribute('x2', x2.toString());
+      line.setAttribute('y2', y2.toString());
+      line.setAttribute('stroke', color);
+      line.setAttribute('stroke-width', '5');
+      line.setAttribute('data-line-id', id);
+
+      svg.appendChild(line);
+    }
+    return line;
   }
-  position();
 
-  return el_line.length > 0 ? (el_line[el_line.length - 1] as HTMLElement) : null;
+  // `parent` の点と `child` の点を結ぶ線を描画
+  return drawLine(x1, y1, x2, y2, `${pId}-${cId}`, 'tomato');
 };
 
 export const makelines = (LeaderLine: any, nodes: any, scale: number): any => {
