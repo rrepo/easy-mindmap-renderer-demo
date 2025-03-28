@@ -53,13 +53,13 @@
         'parent': '4',
         'direction': ''
       },
-      {
-        'id': 7,
-        'text': 'ch7',
-        'url': '',
-        'parent': '5',
-        'direction': ''
-      },
+      // {
+      //   'id': 7,
+      //   'text': 'ch7',
+      //   'url': '',
+      //   'parent': '5',
+      //   'direction': ''
+      // },
       {
         'id': 8,
         'text': 'ch8',
@@ -68,33 +68,40 @@
         'direction': ''
       },
       {
-        'id': 9,
-        'text': 'ch9',
+        'id': 13,
+        'text': 'ch13',
         'url': '',
-        'parent': 'title',
+        'parent': '2',
         'direction': ''
       },
-      {
-        'id': 10,
-        'text': 'ch10',
-        'url': '',
-        'parent': 'title',
-        'direction': ''
-      },
-      {
-        'id': 11,
-        'text': 'ch11',
-        'url': '',
-        'parent': '8',
-        'direction': ''
-      },
-      {
-        'id': 12,
-        'text': 'ch12',
-        'url': '',
-        'parent': '11',
-        'direction': ''
-      },
+      // {
+      //   'id': 9,
+      //   'text': 'ch9',
+      //   'url': '',
+      //   'parent': 'title',
+      //   'direction': ''
+      // },
+      // {
+      //   'id': 10,
+      //   'text': 'ch10',
+      //   'url': '',
+      //   'parent': 'title',
+      //   'direction': ''
+      // },
+      // {
+      //   'id': 11,
+      //   'text': 'ch11',
+      //   'url': '',
+      //   'parent': '8',
+      //   'direction': ''
+      // },
+      // {
+      //   'id': 12,
+      //   'text': 'ch12',
+      //   'url': '',
+      //   'parent': '11',
+      //   'direction': ''
+      // },
     ]">
 
     </MindMap>

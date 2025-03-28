@@ -519,10 +519,11 @@ onMounted(() => {
   el_title.scrollIntoView({ block: 'center', inline: 'center' });
 
   const el_field: any = document.getElementById('field');
+
   el_field.addEventListener('wheel', (event: any) => {
     event.preventDefault();
 
-    const zoomSpeed = 0.1;
+    const zoomSpeed = 0.5; // 拡大縮小の変化量を 0.3 に変更
     let newScale = scale.value;
 
     if (event.deltaY < 0) {
@@ -535,8 +536,10 @@ onMounted(() => {
 
     scale.value = newScale;
 
-    console.log("new point")
+    console.log("new point", scale.value);
+    onLineReset();
   });
+
 });
 </script>
 
@@ -573,7 +576,7 @@ onMounted(() => {
     top: 0;
     left: 0;
     pointer-events: none;
-    z-index: 0;
+    z-index: 10000;
   }
 }
 
