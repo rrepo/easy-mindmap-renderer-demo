@@ -1,6 +1,11 @@
 <template>
   <div id="edge" v-dragscroll="controlDragZoom" class="edge">
 
+    <div class="op-area">
+      <button class="op-btn" @click="zoomIn">+</button>
+      <button class="op-btn" @click="zoomOut">-</button>
+    </div>
+
     <div class="wrapper">
       <svg id="svg-lines" xmlns="http://www.w3.org/2000/svg" :style="{ transform: `scale(${scale})` }">
       </svg>
@@ -70,7 +75,7 @@ const controlDragZoom: any = ref(true)
 const scale = ref(1);
 const minScale = 0.5;
 const maxScale = 2;
-const scaleStep = 0.3;
+const scaleStep = 0.5;
 
 const zoomIn = () => {
   if (scale.value < maxScale) {
@@ -520,25 +525,24 @@ onMounted(() => {
 
   const el_field: any = document.getElementById('field');
 
-  el_field.addEventListener('wheel', (event: any) => {
-    event.preventDefault();
+  // el_field.addEventListener('wheel', (event: any) => {
+  //   event.preventDefault();
 
-    const zoomSpeed = 0.5; // 拡大縮小の変化量を 0.3 に変更
-    let newScale = scale.value;
+  //   let newScale = scale.value;
 
-    if (event.deltaY < 0) {
-      newScale *= 1 + zoomSpeed; // ズームイン
-    } else {
-      newScale *= 1 - zoomSpeed; // ズームアウト
-    }
+  //   if (event.deltaY < 0) {
+  //     newScale *= 1 + scaleStep; // ズームイン
+  //   } else {
+  //     newScale *= 1 - scaleStep; // ズームアウト
+  //   }
 
-    newScale = Math.max(0.4, Math.min(newScale, 3)); // ズーム範囲制限
+  //   newScale = Math.max(0.4, Math.min(newScale, 3)); // ズーム範囲制限
 
-    scale.value = newScale;
+  //   scale.value = newScale;
 
-    console.log("new point", scale.value);
-    onLineReset();
-  });
+  //   console.log("new point", scale.value);
+  //   onLineReset();
+  // });
 
 });
 </script>
@@ -550,6 +554,25 @@ onMounted(() => {
   overflow: auto;
   background-color: #F5F5F5;
   /* border: 1px solid #000; */
+
+  .op-area {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10000;
+
+    .op-btn {
+      width: 30px;
+      height: 30px;
+      font-size: 23px;
+      background-color: #00aaff;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      margin: 5px;
+    }
+  }
 
   .wrapper {
     position: relative;
@@ -576,7 +599,7 @@ onMounted(() => {
     top: 0;
     left: 0;
     pointer-events: none;
-    z-index: 10000;
+    z-index: 0;
   }
 }
 
