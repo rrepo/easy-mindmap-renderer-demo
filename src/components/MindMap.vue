@@ -53,7 +53,7 @@ import trashSvg from '@/assets/icons/trash-solid.svg';
 import moveSvg from '@/assets/icons/move-svgrepo-com.svg'
 
 import { makelines, removeline, LineReset } from '@/composables/lineUtils';
-import { rightAppend, leftAppend, makeFromParent, makeFromChild, getDescendants, deleteNodes } from '@/composables/nodeUtils';
+import { rightAppend, leftAppend, makeFromParent, makeFromChild, getDescendants, deleteNodes, transferNodes } from '@/composables/nodeUtils';
 import { inputTitle, inputNode, createButton, checkDropZone, mouseMove } from '@/composables/nodeFuncUtils';
 
 const props = defineProps({
@@ -73,7 +73,7 @@ const plusButton: any = ref(true)
 const controlDragZoom: any = ref(true)
 
 const scale = ref(1);
-const minScale = 0.5;
+const minScale = 0.3;
 const maxScale = 2;
 const scaleStep = 0.5;
 
@@ -84,9 +84,10 @@ const zoomIn = () => {
 };
 
 const zoomOut = () => {
-  console.log("out")
-  if (scale.value > minScale) {
+  if (scale.value > minScale + scaleStep) {
     scale.value -= scaleStep;
+  } else {
+    scale.value = minScale; // 最小値に制限
   }
 };
 
@@ -449,7 +450,6 @@ const onMoveNode = (e: any) => {
     initialTop = initialTop - el.offsetHeight / 2;
   }
 
-  console.log(initialTop)
   el.style.position = "absolute";
   onLineReset()
 
@@ -474,13 +474,21 @@ const onMoveNode = (e: any) => {
       const result = deleteNodes(nodes.value, id, count.value)
       nodes.value = result.nodes
       count.value = result.count
+
+
+      let pId = Number(dropEl.id.replace("node", ""))
+      // console.log(nodes.value )
+      // console.log(result.removeNodes)
+
+      transferNodes(nodes.value, pId,)
+
     } else {
       el.style.position = "static";
     }
 
     isDragging = false;
     document.removeEventListener("mousemove", (moveEvent) => {
-      const offset: any = mouseMove(isDragging, moveEvent, el!, initialLeft, initialTop, startX, startY);
+      const offset: any = mouseMove(isDragging, moveEvent, el!, initialLeft, initialTop, startX, startY, scale.value);
       offsetX = offset.offsetX
       offsetY = offset.offsetY
     });
@@ -523,8 +531,7 @@ onMounted(() => {
   });
   el_title.scrollIntoView({ block: 'center', inline: 'center' });
 
-  const el_field: any = document.getElementById('field');
-
+  // const el_field: any = document.getElementById('field');
   // el_field.addEventListener('wheel', (event: any) => {
   //   event.preventDefault();
 
@@ -576,8 +583,8 @@ onMounted(() => {
 
   .wrapper {
     position: relative;
-    width: 2000px;
-    height: 2000px;
+    width: 5000px;
+    height: 5000px;
     margin: 20px;
     display: flex;
     align-items: center;
@@ -586,8 +593,8 @@ onMounted(() => {
 
   .field {
     position: relative;
-    width: 2000px;
-    height: 2000px;
+    width: 5000px;
+    height: 5000px;
     z-index: 1;
     display: flex;
   }
@@ -604,14 +611,14 @@ onMounted(() => {
 }
 
 .center {
-  width: 10%;
+  width: 5%;
   height: 100%;
   /* z-index: 1; */
   /* background-color: coral; */
 }
 
 .right {
-  width: 45%;
+  width: 47.5%;
   height: 100%;
   display: flex;
   align-items: center;
@@ -631,7 +638,7 @@ onMounted(() => {
 }
 
 .left {
-  width: 45%;
+  width: 47.5%;
   height: 100%;
   display: flex;
   align-items: center;

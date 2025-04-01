@@ -55,11 +55,13 @@ export const focusNode = (focus: any) => {
 export const getDescendants = (nodes: any[], parentId: number): any => {
   // 削除するノードの ID をリスト化
   const idsToRemove = new Set([parentId]);
+  const allRemovedNodes: any[] = [];
 
   // 再帰的に子ノードも削除対象に追加
   function collectChildren(id: any) {
     nodes.forEach(node => {
       if (node.parent == id) { // `==` で型の違いにも対応
+        allRemovedNodes.push(node);
         idsToRemove.add(node.id);
         collectChildren(node.id); // 再帰処理
       }
@@ -70,7 +72,8 @@ export const getDescendants = (nodes: any[], parentId: number): any => {
 
   // 削除対象を除いた新しい配列を作成
   const newNode: any = nodes.filter(node => !idsToRemove.has(node.id));
-  return { mainNodes: newNode, descendantNodes: Array.from(idsToRemove) };
+  allRemovedNodes.unshift(nodes.find(node => node.id === parentId));
+  return { mainNodes: newNode, descendantNodes: Array.from(idsToRemove), removedNodes: allRemovedNodes };
 }
 
 export const deleteNodes = (nodes: any[], id: number, count: number) => {
@@ -78,23 +81,38 @@ export const deleteNodes = (nodes: any[], id: number, count: number) => {
 
   const result = getDescendants(nodes, id)
   const newNodes = result.mainNodes
-  const removeNodes = result.descendantNodes
+  const removeNodeIds = result.descendantNodes
+  const removedNodes = result.removedNodes
+  console.log(removedNodes)
 
   nodes = newNodes
+
+  let removedEl = null
 
   if (node.parent == "title") {
     const rap = document.getElementById(`rap-node${node.id}`)
     rap?.remove()
+    removedEl = rap
     count--
   } else {
-    removeNodes.forEach((node: any) => {
+    removedEl = removeNodeIds
+    removeNodeIds.forEach((node: any) => {
       const el: any = document.getElementById(`selector${node}`)
       el.remove()
     })
 
     const selectorMargin = document.getElementById(`selector-margin${id}`)
     selectorMargin?.remove()
+    const rap = document.getElementById(`selector-margin${id}`)
+    // rap?.remove()
+    removedEl = rap
   }
 
   return { nodes, count }
+}
+
+export const transferNodes = (nodes: any[], pId: any) => {
+  // console.log(pearentEl, childEl)
+  // console.log(document.getElementById(pId))
+  // document.getElementById(pId)?.append(childEl)
 }
