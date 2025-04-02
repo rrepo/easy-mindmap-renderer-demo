@@ -474,13 +474,18 @@ const onMoveNode = (e: any) => {
       const result = deleteNodes(nodes.value, id, count.value)
       nodes.value = result.nodes
       count.value = result.count
-
-
       let pId = Number(dropEl.id.replace("node", ""))
-      // console.log(nodes.value )
-      // console.log(result.removeNodes)
 
-      transferNodes(nodes.value, pId,)
+      // transferNodes(nodes.value, pId, result.removedNodes)
+
+      const newNodes = result.removedNodes
+      newNodes[0].parent = pId
+      console.log(newNodes[0])
+      newNodes.forEach((node: any) => {
+        nodes.value.push(node)
+        createNewNode(node)
+      });
+
 
     } else {
       el.style.position = "static";

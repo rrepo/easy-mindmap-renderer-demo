@@ -32,7 +32,7 @@ export const makeFromChild = (nodes: any, el: any, node_text: any, rap_node: any
     rightAppend(rap_node, node_text, node_childes, node_selector);
     rap_node.classList.add('rap_node');
   } else {
-    if (nodes[el.parent].parent == "title") {
+    if (nodes[el.parent] && nodes[el.parent].parent == "title") {
       rightAppend(rap_node, node_text, node_childes, node_selector);
     } else {
       rightAppend(rap_node, node_text, node_childes, node_selector);
@@ -83,7 +83,6 @@ export const deleteNodes = (nodes: any[], id: number, count: number) => {
   const newNodes = result.mainNodes
   const removeNodeIds = result.descendantNodes
   const removedNodes = result.removedNodes
-  console.log(removedNodes)
 
   nodes = newNodes
 
@@ -108,11 +107,9 @@ export const deleteNodes = (nodes: any[], id: number, count: number) => {
     removedEl = rap
   }
 
-  return { nodes, count }
+  return { nodes, count, removedNodes }
 }
 
-export const transferNodes = (nodes: any[], pId: any) => {
-  // console.log(pearentEl, childEl)
-  // console.log(document.getElementById(pId))
-  // document.getElementById(pId)?.append(childEl)
+export const transferNodes = (nodes: any[], pId: any, newNodes: any) => {
+  console.log(newNodes)
 }
