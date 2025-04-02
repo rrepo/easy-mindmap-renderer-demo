@@ -152,9 +152,10 @@ const update_focus = (e) => {
 
     // ボタンをラップ要素に追加
     wrapper.appendChild(createButton(plusChildButton, plusSvg, "plus-button"));
-    wrapper.appendChild(createButton(plusSiblingButton, plusSvg, "plus-sibling-button"));
+
 
     if (id != "title") {
+      wrapper.appendChild(createButton(plusSiblingButton, plusSvg, "plus-sibling-button"));
       wrapper.appendChild(createButton(moveButton, moveSvg, "move-button"));
       wrapper.appendChild(createButton(deleteButton, trashSvg, "delete-button"));
     }
@@ -533,27 +534,6 @@ onMounted(() => {
     el_edge.addEventListener('scroll', focus_node);
   });
   el_title.scrollIntoView({ block: 'center', inline: 'center' });
-
-  // const el_field: any = document.getElementById('field');
-  // el_field.addEventListener('wheel', (event: any) => {
-  //   event.preventDefault();
-
-  //   let newScale = scale.value;
-
-  //   if (event.deltaY < 0) {
-  //     newScale *= 1 + scaleStep; // ズームイン
-  //   } else {
-  //     newScale *= 1 - scaleStep; // ズームアウト
-  //   }
-
-  //   newScale = Math.max(0.4, Math.min(newScale, 3)); // ズーム範囲制限
-
-  //   scale.value = newScale;
-
-  //   console.log("new point", scale.value);
-  //   onLineReset();
-  // });
-
 });
 </script>
 
