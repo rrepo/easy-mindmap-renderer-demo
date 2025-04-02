@@ -53,7 +53,7 @@ import trashSvg from '@/assets/icons/trash-solid.svg';
 import moveSvg from '@/assets/icons/move-svgrepo-com.svg'
 
 import { makelines, removeline, LineReset } from '@/composables/lineUtils';
-import { rightAppend, leftAppend, makeFromParent, makeFromChild, getDescendants, deleteNodes, transferNodes } from '@/composables/nodeUtils';
+import { rightAppend, leftAppend, makeFromParent, makeFromChild, getDescendants, deleteNodes } from '@/composables/nodeUtils';
 import { inputTitle, inputNode, createButton, checkDropZone, mouseMove } from '@/composables/nodeFuncUtils';
 
 const props = defineProps({
@@ -475,8 +475,6 @@ const onMoveNode = (e: any) => {
       nodes.value = result.nodes
       count.value = result.count
       let pId = Number(dropEl.id.replace("node", ""))
-
-      // transferNodes(nodes.value, pId, result.removedNodes)
 
       const newNodes = result.removedNodes
       newNodes[0].parent = pId

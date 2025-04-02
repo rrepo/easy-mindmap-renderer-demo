@@ -109,7 +109,3 @@ export const deleteNodes = (nodes: any[], id: number, count: number) => {
 
   return { nodes, count, removedNodes }
 }
-
-export const transferNodes = (nodes: any[], pId: any, newNodes: any) => {
-  console.log(newNodes)
-}
