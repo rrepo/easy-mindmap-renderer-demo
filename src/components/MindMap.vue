@@ -71,6 +71,8 @@ const isEditing: any = ref()
 isEditing.value = false
 const plusButton: any = ref(true)
 const controlDragZoom: any = ref(true)
+const nodesNum: any = ref(0)
+nodesNum.value = nodes.value.length
 
 const scale = ref(1);
 const minScale = 0.3;
@@ -459,6 +461,13 @@ const onMoveNode = (e: any) => {
   let offsetX = 0;
   let offsetY = 0;
 
+  let targets = [
+    ...document.querySelectorAll(".p_nodes, .c_nodes"),
+    ...document.querySelectorAll(".title_node_rap")
+  ];
+  console.log(targets)
+
+
   const onMouseMove = (moveEvent: MouseEvent) => {
     const offset = mouseMove(isDragging, moveEvent, el!, initialLeft, initialTop, startX, startY, scale.value);
     if (offset) {
@@ -468,7 +477,13 @@ const onMoveNode = (e: any) => {
   };
 
   const onMouseUp = (moveEvent: MouseEvent) => {
-    const dropEl: any = checkDropZone(moveEvent.clientX, moveEvent.clientY, el, Array.from(document.querySelectorAll(".p_nodes, .c_nodes")));
+    const dropEl: any = checkDropZone(
+      moveEvent.clientX,
+      moveEvent.clientY,
+      el,
+      // targets
+    );
+
     if (dropEl) {
       dropEl.classList.remove("highlight");
       let id = Number(focus.value.id.replace("selector", ""))
@@ -479,12 +494,11 @@ const onMoveNode = (e: any) => {
 
       const newNodes = result.removedNodes
       newNodes[0].parent = pId
-      console.log(newNodes[0])
       newNodes.forEach((node: any) => {
+        node.direction = ""
         nodes.value.push(node)
         createNewNode(node)
       });
-
 
     } else {
       el.style.position = "static";
@@ -681,7 +695,7 @@ onMounted(() => {
 
   /* pointer-events: none; */
   position: relative;
-  z-index: -10;
+  z-index: -1;
 }
 
 .title_nodes:focus {

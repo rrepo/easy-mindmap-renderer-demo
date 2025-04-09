@@ -31,7 +31,14 @@ export const createButton = (button: any, svg: any, cssClass: any): any => {
   return button;
 }
 
-export const checkDropZone = (x: number, y: number, el: any, allNodes: any) => {
+export const checkDropZone = (x: number, y: number, el: any) => {
+  const selectorElement = document.getElementById("title");
+  const allNodes: any[] = [
+    ...document.querySelectorAll(".p_nodes, .c_nodes"),
+    ...(selectorElement ? [selectorElement] : [])
+  ];
+
+
   allNodes.filter((node: any) => node !== el);
 
   allNodes.forEach((zone: any) => {
@@ -73,11 +80,12 @@ export const mouseMove = (
   el.style.left = `${initialLeft + offsetX}px`;
   el.style.top = `${initialTop + offsetY}px`;
 
+  console.log("checkdrop")
   checkDropZone(
     moveEvent.clientX,
     moveEvent.clientY,
     el,
-    Array.from(document.querySelectorAll(".p_nodes, .c_nodes"))
+    // Array.from(document.querySelectorAll(".p_nodes, .c_nodes"))
   );
 
   return { offsetX, offsetY };
