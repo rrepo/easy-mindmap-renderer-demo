@@ -490,7 +490,14 @@ const onMoveNode = (e: any) => {
       const result = deleteNodes(nodes.value, id, count.value)
       nodes.value = result.nodes
       count.value = result.count
-      let pId = Number(dropEl.id.replace("node", ""))
+      let pId
+
+      if (dropEl.id == "title") {
+        pId = "title"
+        count.value++
+      } else {
+        pId = Number(dropEl.id.replace("node", ""))
+      }
 
       const newNodes = result.removedNodes
       newNodes[0].parent = pId
