@@ -80,7 +80,6 @@ export const mouseMove = (
   el.style.left = `${initialLeft + offsetX}px`;
   el.style.top = `${initialTop + offsetY}px`;
 
-  console.log("checkdrop")
   checkDropZone(
     moveEvent.clientX,
     moveEvent.clientY,

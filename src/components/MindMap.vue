@@ -465,7 +465,6 @@ const onMoveNode = (e: any) => {
     ...document.querySelectorAll(".p_nodes, .c_nodes"),
     ...document.querySelectorAll(".title_node_rap")
   ];
-  console.log(targets)
 
 
   const onMouseMove = (moveEvent: MouseEvent) => {
@@ -489,7 +488,6 @@ const onMoveNode = (e: any) => {
       let id = Number(focus.value.id.replace("selector", ""))
       const result = deleteNodes(nodes.value, id, count.value)
       nodes.value = result.nodes
-      count.value = result.count
       let pId
 
       if (dropEl.id == "title") {
