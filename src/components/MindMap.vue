@@ -339,7 +339,7 @@ const createChildNode = () => {
 
   // 新しいノードの情報を生成
   const newNode = {
-    id: nodes.value[nodes.value.length - 1].id + 1,
+    id: nodes.value.length + 1,
     text: nodes.value.length + 1, // デフォルトテキスト
     parent: parentNodeId, // 親ノード
     direction: paredentNode.direction,
