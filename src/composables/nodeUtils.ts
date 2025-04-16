@@ -18,6 +18,7 @@ export const makeFromParent = (node_text: any, rap_node: any, node_childes: any)
 };
 
 export const makeFromChild = (nodes: any, el: any, node_text: any, rap_node: any, node_childes: any, node_selector: any) => {
+
   const margin_rap_node = document.createElement('div');
   margin_rap_node.classList.add('selector');
   margin_rap_node.id = `selector-margin${el.id}`;
@@ -36,9 +37,10 @@ export const makeFromChild = (nodes: any, el: any, node_text: any, rap_node: any
       rightAppend(rap_node, node_text, node_childes, node_selector);
     } else {
       rightAppend(rap_node, node_text, node_childes, node_selector);
-      margin_rap_node.classList.add('margin-left-cnodes');
+      // margin_rap_node.classList.add('margin-left-cnodes');
     }
     rap_node.classList.add('rap_node_left');
+    margin_rap_node.classList.add('margin-left-cnodes');
   }
 
   margin_rap_node.appendChild(rap_node);

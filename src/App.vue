@@ -53,84 +53,53 @@
         'parent': '4',
         'direction': ''
       },
-      // {
-      //   'id': 7,
-      //   'text': 'ch7',
-      //   'url': '',
-      //   'parent': '5',
-      //   'direction': ''
-      // },
+      {
+        'id': 7,
+        'text': 'ch7',
+        'url': '',
+        'parent': 'title',
+        'direction': ''
+      },
       {
         'id': 8,
         'text': 'ch8',
         'url': '',
+        'parent': '2',
+        'direction': ''
+      },
+      {
+        'id': 9,
+        'text': 'ch9',
+        'url': '',
         'parent': 'title',
+        'direction': ''
+      },
+      {
+        'id': 10,
+        'text': 'ch10',
+        'url': '',
+        'parent': '1',
+        'direction': ''
+      },
+      {
+        'id': 11,
+        'text': 'ch11',
+        'url': '',
+        'parent': '1',
+        'direction': ''
+      },
+      {
+        'id': 12,
+        'text': 'ch12',
+        'url': '',
+        'parent': '11',
         'direction': ''
       },
       {
         'id': 13,
         'text': 'ch13',
         'url': '',
-        'parent': '2',
-        'direction': ''
-      },
-      // {
-      //   'id': 9,
-      //   'text': 'ch9',
-      //   'url': '',
-      //   'parent': 'title',
-      //   'direction': ''
-      // },
-      // {
-      //   'id': 10,
-      //   'text': 'ch10',
-      //   'url': '',
-      //   'parent': 'title',
-      //   'direction': ''
-      // },
-      // {
-      //   'id': 11,
-      //   'text': 'ch11',
-      //   'url': '',
-      //   'parent': '8',
-      //   'direction': ''
-      // },
-      // {
-      //   'id': 12,
-      //   'text': 'ch12',
-      //   'url': '',
-      //   'parent': '11',
-      //   'direction': ''
-      // },
-      {
-        'id': 14,
-        'text': 'ch14',
-        'url': '',
-        'parent': 'title',
-        'direction': ''
-      }, {
-        'id': 16,
-        'text': 'ch16',
-        'url': '',
-        'parent': '14',
-        'direction': ''
-      }, {
-        'id': 17,
-        'text': 'ch17',
-        'url': '',
-        'parent': '16',
-        'direction': ''
-      }, {
-        'id': 18,
-        'text': 'ch18',
-        'url': '',
-        'parent': '16',
-        'direction': ''
-      }, {
-        'id': 15,
-        'text': 'ch15',
-        'url': '',
-        'parent': '14',
+        'parent': '11',
         'direction': ''
       },
     ]">
