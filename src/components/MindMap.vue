@@ -165,7 +165,11 @@ const update_focus = (e) => {
 
     // ボタンクリック時の動作を設定
     plusChildButton.addEventListener("click", () => {
-      createChildNode()
+      createNode("child");
+    });
+
+    plusSiblingButton.addEventListener("click", () => {
+      createNode("sibling");
     });
 
     deleteButton.addEventListener("click", () => {
@@ -325,40 +329,52 @@ const move_focus_in_direction = (direction: any) => {
   }
 };
 
-const createChildNode = () => {
+const createNode = (mode: "child" | "sibling") => {
   if (!focus.value) return;
 
-  let parentNodeId = focus.value.id.replace("selector", "");
-  let paredentNode = null
+  const currentNodeId = focus.value.id.replace("selector", "");
+  const currentNode = nodes.value.find((node: any) => node.id == currentNodeId);
 
-  if (parentNodeId == "") {
-    parentNodeId = "title"
-    paredentNode = "title"
-  } else {
-    paredentNode = nodes.value.find((node: any) => node.id == parentNodeId)
+  if (!currentNode && mode === "sibling") return;
+
+  let parentNodeId: string | undefined;
+  let direction: string | undefined;
+
+  if (mode === "child") {
+    if (currentNodeId === "") {
+      parentNodeId = "title";
+      direction = "right"; // ここは必要に応じてデフォルトの方向を指定
+    } else {
+      parentNodeId = currentNodeId;
+      direction = currentNode?.direction;
+    }
+  } else if (mode === "sibling") {
+    parentNodeId = currentNode.parent;
+    direction = currentNode.direction;
   }
 
-  // 新しいノードの情報を生成
+  if (!parentNodeId || !direction) return;
+
   const newNode = {
     id: nodes.value.length + 1,
-    text: nodes.value.length + 1, // デフォルトテキスト
-    parent: parentNodeId, // 親ノード
-    direction: paredentNode.direction,
+    text: nodes.value.length + 1,
+    parent: parentNodeId,
+    direction: direction,
   };
+
   nodes.value.push(newNode);
+  createNewNode(newNode);
 
-  createNewNode(newNode)
-
-  // フォーカスしたあとisEditingをtrueにする
   update_focus({ srcElement: document.getElementById("selector" + newNode.id) });
   focus_node();
-  const newFocus: any = document.getElementById("node" + newNode.id)
+
+  const newFocus: any = document.getElementById("node" + newNode.id);
   newFocus.focus();
 
-  isEditing.value = true
-
-  onLineReset()
+  isEditing.value = true;
+  onLineReset();
 };
+
 
 const createNewNode = (el: any) => {
   const right: any = document.getElementById('right_center');
