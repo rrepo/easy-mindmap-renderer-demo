@@ -44,6 +44,7 @@
 </template>
 
 <script setup lang="ts">
+// safe
 import { onMounted, ref, watchEffect } from 'vue';
 // import { dragscroll } from 'vue-dragscroll';
 import plusSvg from '@/assets/icons/plus-solid.svg';
