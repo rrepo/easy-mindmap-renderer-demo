@@ -216,25 +216,27 @@ const move_focus = (e: any) => {
     move_focus_in_direction('right');
   } else if (e.keyCode === 40) { // Arrow Down
     move_focus_in_direction('down');
-  } else if (e.metaKey && e.key === 'Enter') {
-    const editableNode = focus.value.querySelector('.c_nodes, .p_nodes, .title_nodes');
-    if (editableNode) {
-      if (!isEditing.value) {
-        editableNode.focus();
-        const range = document.createRange();
-        const selection: any = window.getSelection();
-        range.selectNodeContents(editableNode); // 要素内のすべての内容を選択
-        range.collapse(false); // 範囲を折りたたんで一番後ろにカーソルを移動
-        selection.removeAllRanges(); // 既存の選択範囲をクリア
-        selection.addRange(range); // 新しい範囲を追加
-        isEditing.value = true;
-      } else {
-        isEditing.value = false;
-        editableNode.blur();
-        focus.value.focus()
-      }
-    }
-  }
+  } 
+  // else if (e.metaKey && e.key === 'Enter') {
+  //   console.log('Enter key pressed with Meta key');
+  //   const editableNode = focus.value.querySelector('.c_nodes, .p_nodes, .title_nodes');
+  //   if (editableNode) {
+  //     if (!isEditing.value) {
+  //       editableNode.focus();
+  //       const range = document.createRange();
+  //       const selection: any = window.getSelection();
+  //       range.selectNodeContents(editableNode); // 要素内のすべての内容を選択
+  //       range.collapse(false); // 範囲を折りたたんで一番後ろにカーソルを移動
+  //       selection.removeAllRanges(); // 既存の選択範囲をクリア
+  //       selection.addRange(range); // 新しい範囲を追加
+  //       isEditing.value = true;
+  //     } else {
+  //       isEditing.value = false;
+  //       editableNode.blur();
+  //       focus.value.focus()
+  //     }
+  //   }
+  // }
 };
 
 const move_focus_in_direction = (direction: any) => {
@@ -429,12 +431,12 @@ const createNewNode = (el: any) => {
   });
 
   el_selector.addEventListener('dblclick', (e: any) => {
-    inputNode(e.srcElement.id.substr(8));
+    isEditing.value = inputNode(e.srcElement.id.substr(8),isEditing.value);
   });
 
   el_selector.addEventListener('keydown', (e: any) => {
     if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
-      inputNode(e.srcElement.id.substr(8));
+      isEditing.value = inputNode(e.srcElement.id.substr(8),isEditing.value);
     }
     move_focus(e); // Call move_focus to handle Tab key navigation and Arrow keys
   });
