@@ -14,9 +14,8 @@ export const inputTitle = (): any => {
 export const inputNode = (e: any, isEditing: boolean): any => {
   const target = document.getElementById(`node${e}`);
   if (!target) {
-    console.warn(`Element with id node${e} not found`);
-    console.log("not found: ", e);
-    return isEditing; // 状態はそのまま返す
+    // console.log(`Element with id node${e} not found`);
+    return false; // 編集モードを強制終了
   }
 
   console.log("target: ", isEditing);

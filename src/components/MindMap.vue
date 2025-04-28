@@ -431,12 +431,25 @@ const createNewNode = (el: any) => {
   });
 
   el_selector.addEventListener('dblclick', (e: any) => {
+    console.log("dblclick: ", e.srcElement.id);
     isEditing.value = inputNode(e.srcElement.id.substr(8),isEditing.value);
   });
 
   el_selector.addEventListener('keydown', (e: any) => {
     if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
-      isEditing.value = inputNode(e.srcElement.id.substr(8),isEditing.value);
+      console.log("enter ctrl: ", e.srcElement);
+      const elementId = e.srcElement.id;
+      let numericId;
+      
+      if (elementId.includes('node')) {
+        numericId = elementId.replace('node', '');
+      } else if (elementId.includes('selector')) {
+        numericId = elementId.replace('selector', '');
+      }
+      
+      if (numericId !== undefined) {
+        isEditing.value = inputNode(numericId, isEditing.value);
+      }
     }
     move_focus(e); // Call move_focus to handle Tab key navigation and Arrow keys
   });
